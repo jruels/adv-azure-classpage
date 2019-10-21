@@ -335,5 +335,5 @@ kubectl rollout history deployment/frontend --revision=<number>
 ## Cleanup
 Now delete your AKS cluster to avoid unexpected billing
 ```
-az aks delete --resource-group azaks<your initials --name myAKSCluster
+az aks delete --resource-group azaks<your initials> --name myAKSCluster
 ```
