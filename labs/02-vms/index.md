@@ -116,7 +116,7 @@ $vmSize = 'Standard_DS2_v2'
 
 > **Note**: This sets the values of variables designating the Azure VM name and its size  
 
-1. In the Cloud Shell pane, run the following commands:
+2. In the Cloud Shell pane, run the following commands:
 
 ```powershell
 $resourceGroup = Get-AzResourceGroup -Name 'azscaleset-RG'
@@ -125,7 +125,7 @@ $location = $resourceGroup.Location
 
 > **Note**: These commands set the values of variables designating the target resource group and its location  
 
-1. In the Cloud Shell pane, run the following commands:
+3. In the Cloud Shell pane, run the following commands:
 
 ```powershell
 $availabilitySet = Get-AzAvailabilitySet -ResourceGroupName $resourceGroup.ResourceGroupName -Name 'azscaleset-avset0'
@@ -135,7 +135,7 @@ $subnetid = (Get-AzVirtualNetworkSubnetConfig -Name 'subnet0' -VirtualNetwork $v
 
 > **Note**: These commands set the values of variables designating the availability set, virtual network, and subnet into which you will deploy the new Azure VM  
 
-1. In the Cloud Shell pane, run the following commands:
+4. In the Cloud Shell pane, run the following commands:
 
 ```powershell
 $nsg = New-AzNetworkSecurityGroup -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -Name "$vmName-nsg"
@@ -147,7 +147,7 @@ $nic = New-AzNetworkInterface -Name "$($vmName)$(Get-Random)" -ResourceGroupName
 
 > **Note**: You will configure the network security group you create in this task in the second exercise of this lab  
 
-1. In the Cloud Shell pane, run the following commands:
+5. In the Cloud Shell pane, run the following commands:
 
 ```pwsh
 $adminUsername = 'Student'
@@ -157,7 +157,7 @@ $adminCreds = New-Object PSCredential $adminUsername, ($adminPassword | ConvertT
 
 > **Note**: These commands set the values of variables designating credentials of the local Administrator account of the new Azure VM  
 
-1. In the Cloud Shell pane, run the following commands:
+6. In the Cloud Shell pane, run the following commands:
 
 ```powershell
 $publisherName = 'MicrosoftWindowsServer'
@@ -167,7 +167,7 @@ $skuName = '2016-Datacenter'
 
 > **Note**: These commands set the values of variables designating the properties of the Azure Marketplace image that will be used to provision the new Azure VM  
 
-1. In the Cloud Shell pane, run the following command:
+7. In the Cloud Shell pane, run the following command:
 
 ```pwsh
 $osDiskType = (Get-AzDisk -ResourceGroupName $resourceGroup.ResourceGroupName)[0].Sku.Name
@@ -175,7 +175,7 @@ $osDiskType = (Get-AzDisk -ResourceGroupName $resourceGroup.ResourceGroupName)[0
 
 > **Note**: This command sets the values of a variable designating the operating system disk type of the new Azure VM  
 
-2. In the Cloud Shell pane, run the following commands:
+8. In the Cloud Shell pane, run the following commands:
 
 ```powershell
 $vmConfig = New-AzVMConfig -VMName $vmName -VMSize $vmSize -AvailabilitySetId $availabilitySet.Id
@@ -188,7 +188,7 @@ Set-AzVMBootDiagnostic -VM $vmConfig -Disable
 
 > **Note**: These commands set up the properties of the Azure VM configuration object that will be used to provision the new Azure VM, including the VM size, its availability set, network interface, computer name, local Administrator credentials, the source image, the operating system disk, and boot diagnostics settings.  
 
-3. In the Cloud Shell pane, run the following command:
+9. In the Cloud Shell pane, run the following command:
 
 ```powershell
 New-AzVM -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -VM $vmConfig
