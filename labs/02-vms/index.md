@@ -49,7 +49,8 @@ The main tasks for this exercise are as follows:
 
 	- Region: **(US) East US** (or a region closer to you)
 
-> **Note**: To identify Azure regions where you can provision Azure VMs, refer to [**https://azure.microsoft.com/en-us/regions/offers/**](https://azure.microsoft.com/en-us/regions/offers/)    
+	> **Note**: To identify Azure regions where you can provision Azure VMs, refer to [**https://azure.microsoft.com/en-us/regions/offers/**](https://azure.microsoft.com/en-us/regions/offers/)    
+
 
 	- Availability options: **Availability set**  
 
