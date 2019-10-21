@@ -479,21 +479,21 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 
 > **Note**: The DSC configuration module is available for upload from **02-vms/files/install_iis_vmss.zip**. The module contains the DSC configuration script that installs the Web Server (IIS) role.  
 
-	- Configuration Modules or Script: **"install_iis_vmss.zip"**  
+- Configuration Modules or Script: **"install_iis_vmss.zip"**  
 
-	- Module-qualified Name of Configuration: **install_iis_vmss.ps1\IISInstall**  
+- Module-qualified Name of Configuration: **install_iis_vmss.ps1\IISInstall**  
 
-	- Configuration Arguments: leave blank  
+- Configuration Arguments: leave blank  
 
-	- Configuration Data PSD1 File: leave blank  
+- Configuration Data PSD1 File: leave blank  
 
-	- WMF Version: **latest**  
+- WMF Version: **latest**  
 
-	- Data Collection: **Disable**  
+- Data Collection: **Disable**  
 
-	- Version: **2.76**  
+- Version: **2.76**  
 
-	- Auto Upgrade Minor Version: **Yes**  
+- Auto Upgrade Minor Version: **Yes**  
 
 1. Navigate to the **azscalesetvmss0 - Instances** blade and initiate the upgrade of the **azscalesetvmss0_0** instance.
 
