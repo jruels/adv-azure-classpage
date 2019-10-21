@@ -149,7 +149,7 @@ $nic = New-AzNetworkInterface -Name "$($vmName)$(Get-Random)" -ResourceGroupName
 
 5. In the Cloud Shell pane, run the following commands:
 
-```pwsh
+```powershell
 $adminUsername = 'Student'
 $adminPassword = 'Pa55w.rd1234'
 $adminCreds = New-Object PSCredential $adminUsername, ($adminPassword | ConvertTo-SecureString -AsPlainText -Force)
@@ -169,7 +169,7 @@ $skuName = '2016-Datacenter'
 
 7. In the Cloud Shell pane, run the following command:
 
-```pwsh
+```powershell
 $osDiskType = (Get-AzDisk -ResourceGroupName $resourceGroup.ResourceGroupName)[0].Sku.Name
 ```
 
@@ -393,7 +393,7 @@ The main tasks for this exercise are as follows:
 
 2. In the Cloud Shell pane, run the following command, substituting the placeholder &lt;custom-label&gt; with any string which is likely to be unique.
 
-```pwsh
+```powershell
 $rg = Get-AzResourceGroup -Name azscaleset-RG 
 $location = $resourceGroup.Location
 Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
