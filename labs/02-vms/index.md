@@ -58,7 +58,7 @@ The main tasks for this exercise are as follows:
 
 	- Image: **[smalldisk] Windows Server 2016 Datacenter**  
 
-	- Size: **Standard DS2_v2**  
+	- Size: **Standard D2**  
 
 	- Username: **Student**  
 
@@ -111,7 +111,7 @@ The main tasks for this exercise are as follows:
 
 ```powershell
 $vmName = 'azscaleset-vm1'
-$vmSize = 'Standard_DS2_v2'
+$vmSize = 'Standard_D2'
 ```
 
 > **Note**: This sets the values of variables designating the Azure VM name and its size  
@@ -247,7 +247,7 @@ New-AzVM -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location
 
 - Image SKU: **16.04.0-LTS**
 
-- Vm Size: use **Standard_DS2_v2** 
+- Vm Size: use **Standard_D2** 
 
 > **Note**: Wait for the deployment to complete before you proceed to the next task. This should take about 5 minutes.  
 
