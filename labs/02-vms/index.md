@@ -49,19 +49,19 @@ The main tasks for this exercise are as follows:
 
 	- Region: **(US) East US** (or a region closer to you)
 
-> **Note**: To identify Azure regions where you can provision Azure VMs, refer to [**https://azure.microsoft.com/en-us/regions/offers/**](https://azure.microsoft.com/en-us/regions/offers/)  
+> **Note**: To identify Azure regions where you can provision Azure VMs, refer to [**https://azure.microsoft.com/en-us/regions/offers/**](https://azure.microsoft.com/en-us/regions/offers/)    
 
-	- Availability options: **Availability set**
+	- Availability options: **Availability set**  
 
-	- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.
+	- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.  
 
-	- Image: **[smalldisk] Windows Server 2016 Datacenter**
+	- Image: **[smalldisk] Windows Server 2016 Datacenter**  
 
-	- Size: **Standard DS2_v2**
+	- Size: **Standard DS2_v2**  
 
-	- Username: **Student**
+	- Username: **Student**  
 
-	- Password: **Pa55w.rd1234**
+	- Password: **Pa55w.rd1234**  
 
 	- Public inbound ports: **None**
 
