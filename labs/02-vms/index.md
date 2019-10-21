@@ -43,7 +43,7 @@ The main tasks for this exercise are as follows:
 
 	- Subscription: the name of the subscription you are using in this lab
 
-	- Resource group: the name of a new resource group **scaleset-RG**
+	- Resource group: the name of a new resource group **azscaleset-RG**
 
 	- Virtual machine name: **azscaleset-vm0**
 
