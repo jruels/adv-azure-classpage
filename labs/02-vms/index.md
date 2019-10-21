@@ -41,9 +41,9 @@ The main tasks for this exercise are as follows:
 
 4. Use the **Create a virtual machine** blade to deploy a virtual machine with the following settings:
 
-		- Subscription: the name of the subscription you are using in this lab
+	- Subscription: the name of the subscription you are using in this lab
 
-		- Resource group: the name of a new resource group **azscaleset-RG**
+	- Resource group: the name of a new resource group **azscaleset-RG**
 
 		- Virtual machine name: **azscaleset-vm0**
 
