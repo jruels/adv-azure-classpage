@@ -25,6 +25,7 @@ az aks create \
     --resource-group azaks<your initials> \
     --name myAKSCluster \
     --node-count 2 \
+    --node-vm-size "Standard_D1"
     --generate-ssh-keys
 ```
 
