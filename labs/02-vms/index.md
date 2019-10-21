@@ -43,7 +43,7 @@ The main tasks for this exercise are as follows:
 
 	- Subscription: the name of the subscription you are using in this lab
 
-	- Resource group: the name of a new resource group **azscaleset-RG**
+	- Resource group: the name of a new resource group **scaleset-RG**
 
 	- Virtual machine name: **azscaleset-vm0**
 
@@ -225,11 +225,11 @@ New-AzVM -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location
 
 * Subscription: the name of the subscription you are using in this lab
 
-- Resource group: the name of a new resource group **azscaleset-RG**
+- Resource group: the name of a new resource group **scaleset-RG**
 
 - Location: the same Azure region you chose earlier in this exercise
 
-- Vm Name Prefix: **azscaleset-vm**
+- VM Name Prefix: **azlin-vm**
 
 - Nic Name Prefix: **azscaleset-nic**
 
