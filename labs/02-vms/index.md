@@ -45,41 +45,41 @@ The main tasks for this exercise are as follows:
 
 	- Resource group: the name of a new resource group **azscaleset-RG**
 
-		- Virtual machine name: **azscaleset-vm0**
+	- Virtual machine name: **azscaleset-vm0**
 
-		- Region: **(US) East US** (or a region closer to you)
+	- Region: **(US) East US** (or a region closer to you)
 
 > **Note**: To identify Azure regions where you can provision Azure VMs, refer to [**https://azure.microsoft.com/en-us/regions/offers/**](https://azure.microsoft.com/en-us/regions/offers/)  
 
-		- Availability options: **Availability set**
+	- Availability options: **Availability set**
 
-		- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.
+	- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.
 
-		- Image: **[smalldisk] Windows Server 2016 Datacenter**
+	- Image: **[smalldisk] Windows Server 2016 Datacenter**
 
-		- Size: **Standard DS2_v2**
+	- Size: **Standard DS2_v2**
 
-		- Username: **Student**
+	- Username: **Student**
 
-		- Password: **Pa55w.rd1234**
+	- Password: **Pa55w.rd1234**
 
-		- Public inbound ports: **None**
+	- Public inbound ports: **None**
 
-		- Already have a Windows license?: **No**
+	- Already have a Windows license?: **No**
 
 1. Click **Next: Disks >**.    
 
-		- OS disk type: **Standard HDD**
+	- OS disk type: **Standard HDD**
 
 1. Click **Next: Networking >**.
 
 1. On the Networking tab, click **Create new** under Virtual Network. Use the virtual network name already assigned by default and specify the following:
 
-		- Virtual network address range: **10.103.0.0/16**
+	- Virtual network address range: **10.103.0.0/16**
 
-		- Subnet name: **subnet0**
+	- Subnet name: **subnet0**
 
-		- Subnet address range: **10.103.0.0/24**
+	- Subnet address range: **10.103.0.0/24**
 
 1. Click **OK**.
 
