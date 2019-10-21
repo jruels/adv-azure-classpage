@@ -33,16 +33,16 @@ In the `labs/01-arm-templates` directory you will find all the required files fo
 2. 
     Rather than creating a template from scratch we will use one of the <a href="https://azure.microsoft.com/en-us/resources/templates/" target="_blank"><span style="color: 0066cc">Azure Quickstart Templates</span></a>. We will use a template designed to Deploy a simple Windows  VM.
 
-3. Create a working directory to keep your templates in and copy `01/arm-templates/azure.json` to your new working directory. 
+3. Create a working directory to keep your templates in and copy `01/arm-templates/azuredeploy.json` to your new working directory. 
 
-4. Copy `<your_dir>/azure.json` to  `<your_dir>/storage/storage.json`
+4. Copy `<your_dir>/azuredeploy.json` to  `<your_dir>/storage/storage.json`
 
 You should now have two identital json files   
 
-- `$WORKINGDIR/azure.json`   
+- `$WORKINGDIR/azuredeploy.json`   
 - `$WORKINGDIR/storage/storage.json`   
 
-5. Open `azure.json` in an editor to get a better understanding of the structure. There are five *resources* defined in the template:
+5. Open `azuredeploy.json` in an editor to get a better understanding of the structure. There are five *resources* defined in the template:
 
 - Microsoft.Storage/storageAccounts. 
 - Microsoft.Network/publicIPAddresses. 
