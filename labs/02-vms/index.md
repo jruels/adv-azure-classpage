@@ -58,7 +58,7 @@ The main tasks for this exercise are as follows:
 
 	- Image: **[smalldisk] Windows Server 2016 Datacenter**  
 
-	- Size: **Standard D2**  
+	- Size: **Standard D1**  
 
 	- Username: **Student**  
 
