@@ -3,6 +3,8 @@ In this quickstart, you'll learn how to secure a [Restify](http://restify.com/) 
 
 The scope of this quickstart covers the concerns regarding securing API endpoints. The concerns of signing in and retaining authentication tokens are not implemented here and are the responsibility of a client application. 
 
+Use Azure Shell (Bash) for these labs. 
+
 ## Prerequisites
 
 To get started, complete these prerequisites.
