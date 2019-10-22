@@ -1,6 +1,4 @@
 # Lab 4a: Authenticate web app with AAD
-
-# Quickstart: Secure a Web API with Azure Active Directory
 In this quickstart, you'll learn how to secure a [Restify](http://restify.com/) API endpoint with [Passport](http://passportjs.org/) using the [passport-azure-ad](https://github.com/AzureAD/passport-azure-ad) module to handle communication with Azure Active Directory (Azure AD).
 
 The scope of this quickstart covers the concerns regarding securing API endpoints. The concerns of signing in and retaining authentication tokens are not implemented here and are the responsibility of a client application. 
