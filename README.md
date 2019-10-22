@@ -19,5 +19,5 @@ Lab 2: [Create REST API that uses AAD for authentication](labs/04-aad-web-auth)
 
 
 
-## Bonus labs: 
+### Bonus labs: 
 Lab 1: [Setup Enterprise ready AAD](labs/04-aad)  
