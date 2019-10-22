@@ -3,11 +3,11 @@ In this quickstart, you'll learn how to secure a [Restify](http://restify.com/) 
 
 The scope of this quickstart covers the concerns regarding securing API endpoints. The concerns of signing in and retaining authentication tokens are not implemented here and are the responsibility of a client application. 
 
-Use Azure Shell (Bash) for these labs. 
+#### Configure the project to use Active Directory
 
-## Prerequisites
+To get started configuring the application, there are a few account-specific values you can obtain from the Azure CLI. The easiest way to get started with the CLI is to use the Azure Cloud Shell.
 
-To get started, complete these prerequisites.
+Use Azure Cloud Shell for the following labs.
 
 ### Create the sample project
 
@@ -29,26 +29,7 @@ To begin, add the following code into a file named `package.json`:
   }
 }
 ```
-
 Once `package.json` is created, run `npm install` in your command prompt to install the package dependencies.
-
-#### Configure the project to use Active Directory
-
-To get started configuring the application, there are a few account-specific values you can obtain from the Azure CLI. The easiest way to get started with the CLI is to use the Azure Cloud Shell.
-
-## Use Azure Cloud Shell
-- - - -
-Azure hosts Azure Cloud Shell, an interactive shell environment that you can use through your browser. Cloud Shell lets you use either bash or PowerShell to work with Azure services. You can use the Cloud Shell pre-installed commands to run the code in this article without having to install anything on your local environment.
-To launch Azure Cloud Shell:
-
-To run the code in this article in Azure Cloud Shell:
-1. Launch Cloud Shell.
-
-2. Select the **Copy** button on a code block to copy the code.
-
-3. Paste the code into the Cloud Shell session.
-
-4. Press **Enter** to run the code.
 
 Enter the following command in the cloud shell:
 
