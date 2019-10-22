@@ -53,45 +53,45 @@ The main tasks for this exercise are as follows:
 
 1. From the **Custom deployment** blade, initiate a template deployment with the following settings:
 
-		- Subscription: the name of the subscription you intend to use in this lab
+- Subscription: the name of the subscription you intend to use in this lab
 
-		- Resource group: the name of a new resource group **az1010301-RG**
+- Resource group: the name of a new resource group **az1010301-RG**
 
-		- Location: **West US 2**
+- Location: **West US 2**
 
-		- Admin Username: **Student**
+- Admin Username: **Student**
 
-		- Admin Password: **Pa55w.rd1234**
+- Admin Password: **Pa55w.rd1234**
 
-		- Vm Name Prefix: **az1010301w-vm**
+- Vm Name Prefix: **az1010301w-vm**
 
-		- Nic Name Prefix: **az1010301w-nic**
+- Nic Name Prefix: **az1010301w-nic**
 
-		- Image Publisher: **MicrosoftWindowsServer**
+- Image Publisher: **MicrosoftWindowsServer**
 
-		- Image Offer: **WindowsServer**
+- Image Offer: **WindowsServer**
 
-		- Image SKU: **2016-Datacenter**
+- Image SKU: **2016-Datacenter**
 
-		- Vm Size: use **Standard_DS1** 
+- Vm Size: use **Standard_DS1** 
 
-		- Virtual Network Name: **az1010301-vnet**
+- Virtual Network Name: **az1010301-vnet**
 
-		- Address Prefix: **10.101.31.0/24**
+- Address Prefix: **10.101.31.0/24**
 
-		- Virtual Network Resource Group: **az1010301-RG**
+- Virtual Network Resource Group: **az1010301-RG**
 
-		- Subnet0Name: **subnet0**
+- Subnet0Name: **subnet0**
 
-		- Subnet0Prefix: **10.101.31.0/26**
+- Subnet0Prefix: **10.101.31.0/26**
 
-		- Availability Set Name: **az1010301w-avset**
+- Availability Set Name: **az1010301w-avset**
 
-		- Network Security Group Name: **az1010301w-vm-nsg**
+- Network Security Group Name: **az1010301w-vm-nsg**
 
-		- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
+- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
 
-		- Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
+- Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
 
 > **Note**: Do not wait for the deployment to complete but proceed to the next task.   
 
@@ -120,45 +120,45 @@ The main tasks for this exercise are as follows:
 
 1. From the **Custom deployment** blade, initiate a template deployment with the following settings:
 
-		- Subscription: the name of the subscription you are using in this lab
+- Subscription: the name of the subscription you are using in this lab
 
-		- Resource group: the name of a new resource group **az1010302-RG**
+- Resource group: the name of a new resource group **az1010302-RG**
 
-		- Location: **East US**
+- Location: **East US**
 
-		- Admin Username: **Student**
+- Admin Username: **Student**
 
-		- Admin Password: **Pa55w.rd1234**
+- Admin Password: **Pa55w.rd1234**
 
-		- Vm Name Prefix: **az1010302w-vm**
+- Vm Name Prefix: **az1010302w-vm**
 
-		- Nic Name Prefix: **az1010302w-nic**
+- Nic Name Prefix: **az1010302w-nic**
 
-		- Image Publisher: **MicrosoftWindowsServer**
+- Image Publisher: **MicrosoftWindowsServer**
 
-		- Image Offer: **WindowsServer**
+- Image Offer: **WindowsServer**
 
-		- Image SKU: **2016-Datacenter**
+- Image SKU: **2016-Datacenter**
 
-		- Vm Size: use **Standard_DS1_v2** or **Standard_DS2_v2**, based on the instructor's recommendations
+- Vm Size: use **Standard_DS1_v2** or **Standard_DS2_v2**, based on the instructor's recommendations
 
-		- Virtual Network Name: **az1010302-vnet**
+- Virtual Network Name: **az1010302-vnet**
 
-		- Address Prefix: **10.101.32.0/24**
+- Address Prefix: **10.101.32.0/24**
 
-		- Virtual Network Resource Group: **az1010302-RG**
+- Virtual Network Resource Group: **az1010302-RG**
 
-		- Subnet0Name: **subnet0**
+- Subnet0Name: **subnet0**
 
-		- Subnet0Prefix: **10.101.32.0/26**
+- Subnet0Prefix: **10.101.32.0/26**
 
-		- Availability Set Name: **az1010302w-avset**
+- Availability Set Name: **az1010302w-avset**
 
-		- Network Security Group Name: **az1010302w-vm-nsg**
+- Network Security Group Name: **az1010302w-vm-nsg**
 
-		- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
+- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
 
-		- Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
+- Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
 
 > **Note**: Do not wait for the deployment to complete but proceed to the next exercise.  
 
@@ -192,25 +192,25 @@ The main tasks for this exercise are as follows:
 
 1. From the **Create load balancer** blade, create a new Azure Load Balancer with the following settings:
 
-		- Subscription: the name of the subscription you are using in this lab
+- Subscription: the name of the subscription you are using in this lab
 
-		- Resource group: **az1010301-RG**
+- Resource group: **az1010301-RG**
     
-		- Name: **az1010301w-lb**
+- Name: **az1010301w-lb**
 
-		- Region: **West US 2**
+- Region: **West US 2**
 
-		- Type: **Public**
+- Type: **Public**
 
-		- SKU: **Basic**
+- SKU: **Basic**
 
-		- Public IP address: a new public IP address named **az1010301w-lb-pip**
+- Public IP address: a new public IP address named **az1010301w-lb-pip**
 
-		- Assignment: **Dynamic**
+- Assignment: **Dynamic**
     
-		- Add a public IPv6 address: **No**
+- Add a public IPv6 address: **No**
 
-		- Click **Review + create** and then **Create**
+- Click **Review + create** and then **Create**
 
 1. In the Azure portal, navigate to the blade of the newly deployed Azure load balancer **az1010301w-lb**.
 
@@ -218,25 +218,25 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010301w-lb - Backend pools** blade, add a backend pool with the following settings:
 
-		- Name: **az1010301w-bepool**
+- Name: **az1010301w-bepool**
 
-		- IP version: **IPv4**
+- IP version: **IPv4**
 
-		- Associated to: **Availability set**
+- Associated to: **Availability set**
 
-		- Availability set: **az1010301w-avset**
+- Availability set: **az1010301w-avset**
     
-		- Click **+ Add a target network IP configuration**
+- Click **+ Add a target network IP configuration**
 
-		- Virtual machine: **az1010301w-vm0** 
+- Virtual machine: **az1010301w-vm0** 
 
-		- Network IP configuration: **az1010301w-nic0/ipconfig1 (10.101.31.4)**
+- Network IP configuration: **az1010301w-nic0/ipconfig1 (10.101.31.4)**
 
-		- Virtual machine: **az1010301w-vm1** 
+- Virtual machine: **az1010301w-vm1** 
 
-		- Network IP configuration: **az1010301w-nic1/ipconfig1 (10.101.31.5)**
+- Network IP configuration: **az1010301w-nic1/ipconfig1 (10.101.31.5)**
     
-		- Click **OK**
+- Click **OK**
 
 > **Note**: It is possible that the IP addresses of the Azure VMs are assigned in the reverse order.   
 
@@ -246,15 +246,15 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010301w-lb - Health probes** blade, add a health probe with the following settings:
 
-		- Name: **az1010301w-healthprobe**
+- Name: **az1010301w-healthprobe**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **80**
+- Port: **80**
 
-		- Interval: **5** seconds
+- Interval: **5** seconds
 
-		- Unhealthy threshold: **2** consecutive failures
+- Unhealthy threshold: **2** consecutive failures
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
@@ -262,27 +262,27 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010301w-lb - Load balancing rules** blade, add a load balancing rule with the following settings:
 
-		- Name: **az1010301w-lbrule01**
+- Name: **az1010301w-lbrule01**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend IP address: **LoadBalancerFrontEnd**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **80**
+- Port: **80**
 
-		- Backend port: **80**
+- Backend port: **80**
 
-		- Backend pool: **az1010301w-bepool (2 virtual machines)**
+- Backend pool: **az1010301w-bepool (2 virtual machines)**
 
-		- Health probe: **az1010301w-healthprobe (TCP:80)**
+- Health probe: **az1010301w-healthprobe (TCP:80)**
 
-		- Session persistence: **None**
+- Session persistence: **None**
 
-		- Idle timeout (minutes): **4**
+- Idle timeout (minutes): **4**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
 
 #### Task 2: Implement Azure load balancing rules in the second region
@@ -297,25 +297,25 @@ The main tasks for this exercise are as follows:
 
 1. From the **Create load balancer** blade, create a new Azure Load Balancer with the following settings:
 
-		- Subscription: the name of the subscription you are using in this lab
+- Subscription: the name of the subscription you are using in this lab
     
-		- Resource group: **az1010302-RG**
+- Resource group: **az1010302-RG**
 
-		- Name: **az1010302w-lb**
+- Name: **az1010302w-lb**
     
-		- Region: **East US**
+- Region: **East US**
 
-		- Type: **Public**
+- Type: **Public**
 
-		- SKU: **Basic**
+- SKU: **Basic**
 
-		- Public IP address: a new public IP address named **az1010302w-lb-pip**
+- Public IP address: a new public IP address named **az1010302w-lb-pip**
 
-		- Assignment: **Dynamic**
+- Assignment: **Dynamic**
     
-		- Add a public IPv6 address: **No**
+- Add a public IPv6 address: **No**
     
-		- Click **Review + create** and then **Create**
+- Click **Review + create** and then **Create**
 
 
 1. In the Azure portal, navigate to the blade of the newly deployed Azure load balancer **az1010302w-lb**.
@@ -324,23 +324,23 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010302w-lb - Backend pools** blade, add a backend pool with the following settings:
 
-		- Name: **az1010302w-bepool**
+- Name: **az1010302w-bepool**
 
-		- IP version: **IPv4**
+- IP version: **IPv4**
 
-		- Associated to: **Availability set**
+- Associated to: **Availability set**
 
-		- Availability set: **az1010302w-avset**
+- Availability set: **az1010302w-avset**
     
-		- Click **+ Add a target network IP configuration**
+- Click **+ Add a target network IP configuration**
 
-		- Virtual machine: **az1010302w-vm0** 
+- Virtual machine: **az1010302w-vm0** 
 
-		- Network IP configuration: **az1010302w-nic0/ipconfig1 (10.101.32.4)**
+- Network IP configuration: **az1010302w-nic0/ipconfig1 (10.101.32.4)**
 
-		- Virtual machine: **az1010302w-vm1** 
+- Virtual machine: **az1010302w-vm1** 
 
-		- Network IP configuration: **az1010302w-nic1/ipconfig1 (10.101.32.5)**
+- Network IP configuration: **az1010302w-nic1/ipconfig1 (10.101.32.5)**
 
 > **Note**: It is possible that the IP addresses of the Azure VMs are assigned in the reverse order.   
 
@@ -350,15 +350,15 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010302w-lb - Health probes** blade, add a health probe with the following settings:
 
-		- Name: **az1010302w-healthprobe**
+- Name: **az1010302w-healthprobe**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **80**
+- Port: **80**
 
-		- Interval: **5** seconds
+- Interval: **5** seconds
 
-		- Unhealthy threshold: **2** consecutive failures
+- Unhealthy threshold: **2** consecutive failures
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
@@ -366,27 +366,27 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010302w-lb - Load balancing rules** blade, add a load balancing rule with the following settings:
 
-		- Name: **az1010302w-lbrule01**
+- Name: **az1010302w-lbrule01**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend IP address: **LoadBalancerFrontEnd**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **80**
+- Port: **80**
 
-		- Backend port: **80**
+- Backend port: **80**
 
-		- Backend pool: **az1010302w-bepool (2 virtual machines)**
+- Backend pool: **az1010302w-bepool (2 virtual machines)**
 
-		- Health probe: **az1010302w-healthprobe (TCP:80)**
+- Health probe: **az1010302w-healthprobe (TCP:80)**
 
-		- Session persistence: **None**
+- Session persistence: **None**
 
-		- Idle timeout (minutes): **4**
+- Idle timeout (minutes): **4**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
 
 #### Task 3: Implement Azure NAT rules in the first region
@@ -399,53 +399,53 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010301w-lb - Inbound NAT rules** blade, add the first inbound NAT rule with the following settings:
 
-		- Name: **az1010301w-vm0-RDP**
+- Name: **az1010301w-vm0-RDP**
 
-		- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend IP address: **LoadBalancerFrontEnd**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Service: **Custom**
+- Service: **Custom**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **33890**
+- Port: **33890**
 
-		- Target virtual machine: **az1010301w-vm0**
+- Target virtual machine: **az1010301w-vm0**
 
-		- Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
+- Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
 
-		- Port mapping: **Custom**
+- Port mapping: **Custom**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
-		- Target port: **3389**
+- Target port: **3389**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
 1. From the **az1010301w-lb - Inbound NAT rules** blade, add the second inbound NAT rule with the following settings:
 
-		- Name: **az1010301w-vm1-RDP**
+- Name: **az1010301w-vm1-RDP**
 
-		- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend IP address: **LoadBalancerFrontEnd**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Service: **Custom**
+- Service: **Custom**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **33891**
+- Port: **33891**
 
-		- Target virtual machine: **az1010301w-vm1**
+- Target virtual machine: **az1010301w-vm1**
 
-		- Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
+- Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
 
-		- Port mapping: **Custom**
+- Port mapping: **Custom**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
-		- Target port: **3389**
+- Target port: **3389**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
@@ -458,53 +458,53 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010302w-lb - Inbound NAT rules** blade, add the first inbound NAT rule with the following settings:
 
-		- Name: **az1010302w-vm0-RDP**
+- Name: **az1010302w-vm0-RDP**
 
-		- Frontend IP address: **LoadBalancedFrontEnd**
+- Frontend IP address: **LoadBalancedFrontEnd**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Service: **Custom**
+- Service: **Custom**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **33890**
+- Port: **33890**
 
-		- Target virtual machine: **az1010302w-vm0**
+- Target virtual machine: **az1010302w-vm0**
 
-		- Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
+- Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
 
-		- Port mapping: **Custom**
+- Port mapping: **Custom**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
-		- Target port: **3389**
+- Target port: **3389**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
 1. From the **az1010302w-lb - Inbound NAT rules** blade, add the second inbound NAT rule with the following settings:
 
-		- Name: **az1010302w-vm1-RDP**
+- Name: **az1010302w-vm1-RDP**
 
-		- Frontend IP address: **LoadBalancedFrontEnd**
+- Frontend IP address: **LoadBalancedFrontEnd**
 
-		- IP Version: **IPv4**
+- IP Version: **IPv4**
 
-		- Service: **Custom**
+- Service: **Custom**
 
-		- Protocol: **TCP**
+- Protocol: **TCP**
 
-		- Port: **33891**
+- Port: **33891**
 
-		- Target virtual machine: **az1010302w-vm1**
+- Target virtual machine: **az1010302w-vm1**
 
-		- Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
+- Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
 
-		- Port mapping: **Custom**
+- Port mapping: **Custom**
 
-		- Floating IP (direct server return): **Disabled**
+- Floating IP (direct server return): **Disabled**
 
-		- Target port: **3389**
+- Target port: **3389**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
@@ -572,17 +572,17 @@ The main tasks for this exercise are as follows:
 
 1. From the **Create Traffic Manager profile** blade, create a new Azure Traffic Manager profile with the following settings:
 
-		- Name: a globally unique name in the trafficmanager.net DNS namespace
+- Name: a globally unique name in the trafficmanager.net DNS namespace
 
-		- Routing method: **Weighted**
+- Routing method: **Weighted**
 
-		- Subscription: the name of the subscription you are using in this lab
+- Subscription: the name of the subscription you are using in this lab
 
-		- Resource group: the name of a new resource group **az1010303-RG**
+- Resource group: the name of a new resource group **az1010303-RG**
 
-		- Location: either of the Azure regions you used earlier in this lab
+- Location: either of the Azure regions you used earlier in this lab
 
-		- Click **Create** to apply changes
+- Click **Create** to apply changes
 
 1. In the Azure portal, navigate to the blade of the newly provisioned Traffic Manager profile.
 
@@ -594,39 +594,39 @@ The main tasks for this exercise are as follows:
 
 1. From the **Endpoints** blade, add the first endpoint with the following settings:
 
-		- Type: **Azure endpoint**
+- Type: **Azure endpoint**
 
-		- Name: **az1010301w-lb-pip**
+- Name: **az1010301w-lb-pip**
 
-		- Target resource type: **Public IP address**
+- Target resource type: **Public IP address**
 
-		- Target resource: **az1010301w-lb-pip**
+- Target resource: **az1010301w-lb-pip**
 
-		- Weight: **100**
+- Weight: **100**
 
-		- Custom Header settings: leave blank
+- Custom Header settings: leave blank
 
-		- Add as disabled: leave blank
+- Add as disabled: leave blank
 
 Click **OK** to apply changes
 
 1. From the **Endpoints** blade, add the second endpoint with the following settings:
 
-		- Type: **Azure endpoint**
+- Type: **Azure endpoint**
 
-		- Name: **az1010302w-lb-pip**
+- Name: **az1010302w-lb-pip**
 
-		- Target resource type: **Public IP address**
+- Target resource type: **Public IP address**
 
-		- Target resource: **az1010302w-lb-pip**
+- Target resource: **az1010302w-lb-pip**
 
-		- Weight: **100**
+- Weight: **100**
 
-		- Custom Header settings: leave blank
+- Custom Header settings: leave blank
 
-		- Add as disabled: leave blank
+- Add as disabled: leave blank
     
-		- Click **OK** to apply changes
+- Click **OK** to apply changes
 
 1. On the **Endpoints** blade, examine the entries in the **MONITORING STATUS** column for both endpoints. Wait until both are listed as **Online** before you proceed to the next task.
 
