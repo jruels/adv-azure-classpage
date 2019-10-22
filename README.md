@@ -14,5 +14,5 @@ Lab 3: [Azure Kubernetes Service deployments](labs/03-aks)
 
 
 ### Day 2
-Lab 1: [Create REST API that uses AAD for authentication](04-aad-web-auth)
-**OPTIONAL:** Lab 2: [Setup Enterprise ready AAD](04-aad)
+Lab 1: [Create REST API that uses AAD for authentication](04-aad-web-auth)   
+**OPTIONAL:** Lab 2: [Setup Enterprise ready AAD](04-aad)  
