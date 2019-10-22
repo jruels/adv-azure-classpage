@@ -19,7 +19,7 @@ You can create a new user using the Azure Active Directory portal.
 
 - **User name (required).** The user name of the new user. For example, mary@contoso.com.  
     
-The domain part of the user name must use either the initial default domain name, <_yourdomainname_>.onmicrosoft.com, or a custom domain name, such as contoso.com. For more information about how to create a custom domain name, see [How to add a custom domain name to Azure Active Directory](add-custom-domain.md).
+The domain part of the user name must use either the initial default domain name, `<_yourdomainname_>.onmicrosoft.com`, or a custom domain name, such as contoso.com. 
 
 - **Profile.** Optionally, you can add more information about the user. You can also add user information at a later time. 
 
