@@ -15,23 +15,23 @@ You can create a new user using the Azure Active Directory portal.
 
 ![](index/new-user-user-blade.png)
 
-	- **Name (required).** The first and last name of the new user. For example, Mary Parker.
+- **Name (required).** The first and last name of the new user. For example, Mary Parker.
 
-	- **User name (required).** The user name of the new user. For example, mary@contoso.com.
+- **User name (required).** The user name of the new user. For example, mary@contoso.com.  
     
-       The domain part of the user name must use either the initial default domain name, <_yourdomainname_>.onmicrosoft.com, or a custom domain name, such as contoso.com. For more information about how to create a custom domain name, see [How to add a custom domain name to Azure Active Directory](add-custom-domain.md).
+The domain part of the user name must use either the initial default domain name, <_yourdomainname_>.onmicrosoft.com, or a custom domain name, such as contoso.com. For more information about how to create a custom domain name, see [How to add a custom domain name to Azure Active Directory](add-custom-domain.md).
 
-	- **Profile.** Optionally, you can add more information about the user. You can also add user information at a later time. 
+- **Profile.** Optionally, you can add more information about the user. You can also add user information at a later time. 
 
-	- **Groups.** Optionally, you can add the user to one or more existing groups. You can also add the user to groups at a later time. 
+- **Groups.** Optionally, you can add the user to one or more existing groups. You can also add the user to groups at a later time. 
    
-	- **Directory role.** Optionally, you can add the user to an Azure AD administrator role. You can assign the user to be a Global administrator or one or more of the limited administrator roles in Azure AD. 
+- **Directory role.** Optionally, you can add the user to an Azure AD administrator role. You can assign the user to be a Global administrator or one or more of the limited administrator roles in Azure AD. 
 
 4. Copy the auto-generated password provided in the **Password** box. You'll need to give this password to the user for the initial sign-in process.
 
 5. Select **Create**.
 
-    The user is created and added to your Azure AD tenant.
+   The user is created and added to your Azure AD tenant.
 
 6. Open a new incognito browser window and log into the [Azure Portal](https://portal.azure.com) as the new user. 
 
@@ -47,4 +47,4 @@ You can delete an existing user using Azure Active Directory portal.
 
     ![](index/delete-user-all-users-blade.png)
 
-    The user is deleted and no longer appears on the **Users - All users** page. The user can be seen on the **Deleted users** page for the next 30 days and can be restored during that time. 
+  The user is deleted and no longer appears on the **Users - All users** page. The user can be seen on the **Deleted users** page for the next 30 days and can be restored during that time. 
