@@ -4,6 +4,7 @@ This site includes the slides and labs for the Advanced Azure class.
 
 ## Course Content
 [Day 1](https://bit.ly/adv-azure-day1)
+[Day 2](https://bit.ly/adv-azure-day2)
 
 ## Labs
 
@@ -17,8 +18,8 @@ Lab 3: [Azure Kubernetes Service deployments](labs/03-aks)
 Lab 4: [Manage users in AAD](labs/04-aad-users)   
 Lab 4b: [Create REST API that uses AAD for authentication](labs/04-aad-web-auth)   
 Lab 5: [Deploy webapp](labs/05-webapp)   
-
+Lab 6: [Multiple region Load Balancer and Traffic Manager](labs/06-lb_tm)   
 
 
 ### Bonus labs: 
-Lab 1: [Setup Enterprise ready AAD](labs/04-aad)  
+Lab 1: [Setup Enterprise ready AAD](labs/04-aad)   

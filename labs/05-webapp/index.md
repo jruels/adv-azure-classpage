@@ -1,4 +1,4 @@
-# Lab 5: Serverless Apps in Azure
+# Lab 5: Web Apps in Azure
 
 
 ## Exercise 1: Create Web App
