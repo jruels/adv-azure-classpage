@@ -5,41 +5,82 @@ Kubernetes provides a distributed platform for containerized applications. With 
 In this lab you will: 
 
 * Create a new resource group for AKS cluster
-* Deploy a Kubernetes AKS cluster from Cloud Shell
+* Deploy a Kubernetes AKS cluster from Basj
 * Deploy a multi-tier application 
 * Scale the application 
 * Perform a rolling update
 
-## Create new resource group 
-Run the following command to create a new resource group.
+## Prerequisites
+
+If on Windows, install WSL by opening PowerShell or Command prompt in administrator mode then run the following command:
 ```bash
-az group create --location westus --name azaks<your initials>
+wsl --install
+```
+
+Restart your machine after installation
+
+Open PowerShell then run the following command to open WSL:
+```bash
+wsl
+```
+
+Before you begin, set the following environment variables:
+
+```bash
+# Set your Azure location, resource group and cluster name
+export LOCATION=westus
+export RG_NAME=azaks<your_initials>
+export AKS_CLUSTER_NAME=myAKSCluster
+```
+
+Navigate to the location of `03-aks\manifests` directory from within the WSL environment
+
+## Create new resource group 
+1. Log into Azure Cloud using the command `az login`
+2. Run the following command to create a new resource group.
+```bash
+az group create --location $LOCATION --name $RG_NAME
 ```
 
 ## Create a Kubernetes cluster
 
-Create an AKS cluster using [az aks create][]. The following example creates a cluster named *myAKSCluster* in the resource group named *asaksjrs*. This resource group was created earlier in the lab. To allow an AKS cluster to interact with other Azure resources, an Azure Active Directory service principal is automatically created, since you did not specify one. 
+Create an AKS cluster using `az aks create`. The following example creates a cluster named `$AKS_CLUSTER_NAME` in the resource group `$RG_NAME`.  
 
 ```azurecli
 az aks create \
-    --resource-group azaks<your initials> \
-    --name myAKSCluster \
+    --resource-group $RG_NAME \
+    --name $AKS_CLUSTER_NAME \
     --node-count 2 \
-    --node-vm-size "Standard_D1"
+    --node-vm-size "Standard_DS2_v2" \
     --generate-ssh-keys
 ```
 
 After a few minutes, the deployment completes, and returns JSON-formatted information about the AKS deployment.
 
-> [!NOTE]  
+> **NOTE**
 > To ensure your cluster to operate reliably, you should run at least 2 (two) nodes.  
+> AKS requires system node pool VMs to have at least 2 vCPUs and 4GB of RAM.
 
 ## Connect to cluster using kubectl
 
-To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks get-credentials][] command. The following example gets credentials for the AKS cluster named *myAKSCluster* in the *azaksjrs* resource group:
+To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks get-credentials][] command:
 
 ```azurecli
-az aks get-credentials --resource-group azaksjrs --name myAKSCluster
+az aks get-credentials \
+    --resource-group $RG_NAME \
+    --name $AKS_CLUSTER_NAME
+```
+
+> **NOTE - Only applies to WSL**
+> When you run: `az aks get-credentials ...` from Windows (CMD or PowerShell), it modifies the Windows ~/.kube/config, i.e.:
+> C:\Users\yourname\.kube\config
+> But when you run kubectl inside WSL, it looks for the config in:
+> /home/yourname/.kube/config
+> So kubectl inside WSL is unaware of the credentials downloaded on the Windows side.
+> To fix this run the following command inside WSL:
+```bash
+mkdir -p ~/.kube
+cp /mnt/c/Users/yourname/.kube/config ~/.kube/config
 ```
 
 To verify the connection to your cluster, run the [kubectl get nodes][kubectl-get] command:
@@ -47,9 +88,9 @@ To verify the connection to your cluster, run the [kubectl get nodes][kubectl-ge
 ```
 $ kubectl get nodes
 
-NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-99836630-vmss000000   Ready    agent   6m34s   v1.13.11
-aks-nodepool1-99836630-vmss000001   Ready    agent   6m35s   v1.13.11
+NAME                                STATUS   ROLES    AGE     VERSION
+aks-nodepool1-21636907-vmss000000   Ready    <none>   4m25s   v1.31.8
+aks-nodepool1-21636907-vmss000001   Ready    <none>   4m18s   v1.31.8
 ```
 
 ## Deploy multi-tier application
@@ -85,7 +126,7 @@ Now let’s check the logs
 kubectl logs -f <POD NAME>
 ```
 
-If everything looks good continue
+If everything looks good press `Ctrl + C` and continue
 
 ### Create the Redis Master Service
 The guestbook applications needs to communicate to the Redis master to write its data. You need to apply a Service to proxy the traffic to the Redis master Pod. A Service defines a policy to access the Pods.
@@ -236,9 +277,9 @@ Confirm the version of the image you are using
 kubectl describe deployment frontend |grep Image
 ```
 
-You should see `v4`
+You should see `v5`
 ```
-Image:      gcr.io/google-samples/gb-frontend:v4
+Image:      gcr.io/google-samples/gb-frontend:v5
 ```
 
 Now we are going to update our YAML file
@@ -246,11 +287,11 @@ Now we are going to update our YAML file
 vim manifests/frontend-deployment.yaml
 ```
 
-Replace `v4` with `v5` so it looks like below:
+Replace `v5` with `v6` so it looks like below:
 ```
 ..snip
 - name: php-redis
-        image: gcr.io/google-samples/gb-frontend:v5
+        image: gcr.io/google-samples/gb-frontend:v6
 ```
 
 Now save the file and deploy the new version
@@ -263,33 +304,23 @@ Run the following to see that the Pods are being updated
 kubectl get pods -l tier=frontend
 ```
 
-You should see some Pods being terminated and new Pods being created
+You should see some Pods being terminated and image pull errors
 ```
 NAME                            READY     STATUS              RESTARTS   AGE
-frontend-56d4ff456b-jpdhk       0/1       ContainerCreating   0          0s
-frontend-56d4ff456b-pv2m2       1/1       Running             0          9s
-frontend-56d4ff456b-rbz5p       1/1       Running             0          19s
-frontend-56f7975f44-fgxk8       1/1       Running             0          7m
-frontend-56f7975f44-j76lw       1/1       Terminating         0          7m
-redis-master-6b464554c8-jdxhk   1/1       Running             0          11m
-redis-slave-b58dc4644-crbfs     1/1       Running             0          10m
-redis-slave-b58dc4644-htwkm     1/1       Running             0          10m
+NAME                        READY   STATUS             RESTARTS   AGE
+frontend-75c448f886-97flg   1/1     Running            0          7m28s
+frontend-75c448f886-gbv2d   1/1     Running            0          4m29s
+frontend-75c448f886-rgxpr   1/1     Running            0          14s
+frontend-77bdc497bc-hll7q   0/1     ImagePullBackOff   0          14s
 ```
 
-Great!  Now you can confirm it updated to `v5`
-```
-kubectl describe deployment frontend | grep Image
-```
-
-Now that you're successfully running `v5`  update the YAML file to `v6` and deploy it.  Do not forget to use `--record`
-
-After the update has completed confirm it is running `v6`
+Great!  Now you can confirm it updated to `v6`
 ```
 kubectl describe deployment frontend | grep Image
 ```
 
 ## Rollback deployment
-Now let's say that something went wrong during our update, and we need to rollback to a previous version of our application.
+Now something went wrong during our update, and we need to rollback to a previous version of our application.
 
 As long as we used the `--record` option when deploying this is easy.
 
@@ -333,7 +364,12 @@ kubectl rollout history deployment/frontend --revision=<number>
 ```
 
 ## Cleanup
-Now delete your AKS cluster to avoid unexpected billing
-```
-az aks delete --resource-group azaks<your initials> --name myAKSCluster
+
+Now delete your AKS cluster to avoid unexpected billing:
+
+```bash
+az aks delete \
+    --resource-group $RG_NAME \
+    --name $AKS_CLUSTER_NAME \
+    --yes
 ```
