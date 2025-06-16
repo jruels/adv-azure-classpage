@@ -24,20 +24,20 @@ After completing this lab, you will be able to:
   
 The main tasks for this exercise are as follows:
 
-1. Deploy an Azure VM running Windows Server 2016 Datacenter into an availability set by using the Azure portal
+1. Deploy an Azure VM running Windows Server 2022 Datacenter into an availability set by using the Azure portal
 
-1. Deploy an Azure VM running Windows Server 2016 Datacenter into the existing availability set by using Azure PowerShell
+1. Deploy an Azure VM running Windows Server 2022 Datacenter into the existing availability set by using Azure PowerShell
 
 1. Deploy two Azure VMs running Linux into an availability set by using an Azure Resource Manager template
 
 
-#### Task 1: Deploy an Azure VM running Windows Server 2016 Datacenter into an availability set by using the Azure portal
+#### Task 1: Deploy an Azure VM running Windows Server 2022 Datacenter into an availability set by using the Azure portal
 
 1. In the Azure portal, navigate to the **Create a resource** blade.
 
 2. From the **Create a resource** blade, search Azure Marketplace for **Windows Server**. Select **Windows Server** from the search results list.
 
-3. On the Windows Server page, use the drop-down menu to select **[smalldisk] Windows Server 2016 Datacenter**, and then click **Create**.
+3. On the Windows Server page, use the drop-down menu to select **[smalldisk] Windows Server 2022 Datacenter**, and then click **Create**.
 
 4. Use the **Create a virtual machine** blade to deploy a virtual machine with the following settings:
 
@@ -55,10 +55,11 @@ The main tasks for this exercise are as follows:
 	- Availability options: **Availability set**  
 
 	- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.  
+	- Security type: **Standard**
 
-	- Image: **[smalldisk] Windows Server 2016 Datacenter**  
+	- Image: **[smalldisk] Windows Server 2022 Datacenter**  
 
-	- Size: **Standard D1**  
+	- Size: **Standard DS1 v2**  
 
 	- Username: **Student**  
 
@@ -66,7 +67,7 @@ The main tasks for this exercise are as follows:
 
 	- Public inbound ports: **None**
 
-	- Already have a Windows license?: **No**
+	- Would you like to use an existing Windows Server license?: **Leave default**
 
 1. Click **Next: Disks >**.    
 
@@ -74,7 +75,7 @@ The main tasks for this exercise are as follows:
 
 1. Click **Next: Networking >**.
 
-1. On the Networking tab, click **Create new** under Virtual Network. Use the virtual network name already assigned by default and specify the following:
+2. On the Networking tab, click **Create new** under Virtual Network. Enter `azscaleset-RG-vnet` for the virtual network name and specify the following:
 
 	- Virtual network address range: **10.103.0.0/16**
 
@@ -82,26 +83,26 @@ The main tasks for this exercise are as follows:
 
 	- Subnet address range: **10.103.0.0/24**
 
-1. Click **OK**.
+3. Click **OK**.
 
-1. Click **Next: Management >**.
+4. Click **Next: Management > Monitoring >**.
 
-1. On the Management tab, review the default settings and note that boot diagnostics are turned on with a new diagnostics storage account automatically preconfigured.
+5. On the Monitoring tab, review the default settings and note that boot diagnostics are turned on with a new diagnostics storage account automatically preconfigured.
 
-1. Click **Next: Advanced >**.
+6. Click **Next: Advanced >**.
 
-1. On the Advanced tab, review the available settings.
+7. On the Advanced tab, review the available settings.
 
-1. Leave all settings with their default values, and click **Review + create**.
+8. Leave all settings with their default values, and click **Review + create**.
 
-1. Click **Create**.
+9. Click **Create**.
 
 > **Note**: You will configure the network security group you create in this task in the second exercise of this lab  
 
 > **Note**: Wait for the deployment to complete before you proceed to the next task. This should take about 5 minutes.  
 
 
-#### Task 2: Deploy an Azure VM running Windows Server 2016 Datacenter into the existing availability set by using Azure PowerShell
+#### Task 2: Deploy an Azure VM running Windows Server 2022 Datacenter into the existing availability set by using Azure PowerShell
 
 1. From the Azure Portal, start a PowerShell session in the Cloud Shell pane. 
 
@@ -111,7 +112,7 @@ The main tasks for this exercise are as follows:
 
 ```powershell
 $vmName = 'azscaleset-vm1'
-$vmSize = 'Standard_D1'
+$vmSize = 'Standard_DS1_v2'
 ```
 
 > **Note**: This sets the values of variables designating the Azure VM name and its size  
@@ -139,7 +140,7 @@ $subnetid = (Get-AzVirtualNetworkSubnetConfig -Name 'subnet0' -VirtualNetwork $v
 
 ```powershell
 $nsg = New-AzNetworkSecurityGroup -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -Name "$vmName-nsg"
-$pip = New-AzPublicIpAddress -Name "$vmName-ip" -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -AllocationMethod Dynamic 
+$pip = New-AzPublicIpAddress -Name "$vmName-ip" -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -AllocationMethod Dynamic -Sku Basic
 $nic = New-AzNetworkInterface -Name "$($vmName)$(Get-Random)" -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -SubnetId $subnetid -PublicIpAddressId $pip.Id -NetworkSecurityGroupId $nsg.Id
 ```
 
@@ -162,7 +163,7 @@ $adminCreds = New-Object PSCredential $adminUsername, ($adminPassword | ConvertT
 ```powershell
 $publisherName = 'MicrosoftWindowsServer'
 $offerName = 'WindowsServer'
-$skuName = '2016-Datacenter'
+$skuName = '2022-Datacenter'
 ```
 
 > **Note**: These commands set the values of variables designating the properties of the Azure Marketplace image that will be used to provision the new Azure VM  
@@ -184,6 +185,8 @@ Set-AzVMOperatingSystem -VM $vmConfig -Windows -ComputerName $vmName -Credential
 Set-AzVMSourceImage -VM $vmConfig -PublisherName $publisherName -Offer $offerName -Skus $skuName -Version 'latest'
 Set-AzVMOSDisk -VM $vmConfig -Name "$($vmName)_OsDisk_1_$(Get-Random)" -StorageAccountType $osDiskType -CreateOption fromImage
 Set-AzVMBootDiagnostic -VM $vmConfig -Disable
+Set-AzVMSecurityProfile -VM $vmConfig -SecurityType "Standard"
+Register-AzProviderFeature -FeatureName UseStandardSecurityType -ProviderNamespace Microsoft.Compute
 ```
 
 > **Note**: These commands set up the properties of the Azure VM configuration object that will be used to provision the new Azure VM, including the VM size, its availability set, network interface, computer name, local Administrator credentials, the source image, the operating system disk, and boot diagnostics settings.  
@@ -247,13 +250,13 @@ New-AzVM -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location
 
 - Image SKU: **16.04.0-LTS**
 
-- Vm Size: use **Standard_D1** 
+- Vm Size: use **Standard_DS1_v2** 
 
 > **Note**: Wait for the deployment to complete before you proceed to the next task. This should take about 5 minutes.  
 
-> **Result**: After you completed this exercise, you have deployed an Azure VM running Windows Server 2016 Datacenter into an availability set by using the Azure portal, deployed another Azure VM running Windows Server 2016 Datacenter into the same availability set by using Azure PowerShell, and deployed two Azure VMs running Linux Ubuntu into an availability set by using an Azure Resource Manager template.  
+> **Result**: After you completed this exercise, you have deployed an Azure VM running Windows Server 2022 Datacenter into an availability set by using the Azure portal, deployed another Azure VM running Windows Server 2022 Datacenter into the same availability set by using Azure PowerShell, and deployed two Azure VMs running Linux Ubuntu into an availability set by using an Azure Resource Manager template.  
 
-> **Note**: You could certainly use a template to deploy two Azure VMs hosting Windows Server 2016 datacenter in a single task (just as this was done with two Azure VMs hosting Linux Ubuntu server). The reason for deploying these Azure VMs in two separate tasks was to give you the opportunity to become familiar with both the Azure portal and Azure PowerShell-based deployments.  
+> **Note**: You could certainly use a template to deploy two Azure VMs hosting Windows Server 2022 datacenter in a single task (just as this was done with two Azure VMs hosting Linux Ubuntu server). The reason for deploying these Azure VMs in two separate tasks was to give you the opportunity to become familiar with both the Azure portal and Azure PowerShell-based deployments.  
 
 
 ### Exercise 2: Configure networking settings of Azure VMs running Windows and Linux operating systems
@@ -262,30 +265,26 @@ The main tasks for this exercise are as follows:
 
 1. Configure static private and public IP addresses of Azure VMs
 
-2. Connect to an Azure VM running Windows Server 2016 Datacenter via a public IP address
+2. Connect to an Azure VM running Windows Server 2022 Datacenter via a public IP address
 
 3. Connect to an Azure VM running Linux Ubuntu Server via a private IP address
 
 
 #### Task 1: Configure static private and public IP addresses of Azure VMs
 
-1. In the Azure portal, navigate to the **azscaleset-vm0** blade.
+1. In the Azure portal, search and navigate to the **azscaleset-vm0-ip** blade.
 
-2. From the **azscaleset-vm0** blade, navigate to the **Networking** blade, displaying the configuration of the public IP address **azscaleset-vm0-ip**, assigned to its network interface.
+2. On the azscaleset-vm0-ip blade, click **Configuration** under **Settings**.
 
-3. From the **Networking** blade, click the link representing the public IP address.
-
-4. On the azscaleset-vm0-ip blade, click **Configuration**.
-
-5. Change the assignment of the public IP address to **Static**, and then click **Save**.
+3. Change the assignment of the public IP address to **Static** if it's set to **Dynamic**, and then click **Save**.
 
 > **Note**: Take a note of the public IP address assigned to the network interface of **azscaleset-vm0**. You will need it later in this exercise.  
 
 6. In the Azure portal, navigate to the **azlin-vm0** blade.
 
-7. From the **azlin-vm0** blade, display the **Networking** blade.
+7. From the **azlin-vm0** blade, display the **Networking** blade and click **Network settings**.
 
-8. On the **azlin-vm0 - Networking** blade, click the entry representing network interface (with name starting with azlin-vm0).
+8. On the **azlin-vm0 - Networking** blade, click the entry representing network interface.
 
 9. From the blade displaying the properties of the network interface of **azlin-vm0**, navigate to its **IP configurations** blade.
 
@@ -296,11 +295,11 @@ The main tasks for this exercise are as follows:
 > **Note**: It is possible to connect to Azure VMs via either statically or dynamically assigned public and private IP addresses. Choosing static IP assignment is commonly done in scenarios where these IP addresses are used in combination with IP filtering, routing, or if they are assigned to network interfaces of Azure VMs that function as DNS servers.  
 
 
-#### Task 2: Connect to an Azure VM running Windows Server 2016 Datacenter via a public IP address
+#### Task 2: Connect to an Azure VM running Windows Server 2022 Datacenter via a public IP address
 
 1. In the Azure portal, navigate to the **azscaleset-vm0** blade.
 
-2. From the **azscaleset-vm0** blade, navigate to the **Networking** blade.
+2. From the **azscaleset-vm0** blade, navigate to the **Networking** blade and select **Network settings**.
 
 3. On the **azscaleset-vm0 - Networking** blade, review the inbound port rules of the network security group assigned to the network interface of **azscaleset-vm0**.
 
@@ -351,7 +350,7 @@ The main tasks for this exercise are as follows:
 
 1. Within the RDP session to **azscaleset-vm0**, from Server Manager, click **Local Server**, then disable **IE Enhanced Security Configuration**.
 
-2. Within the RDP session to **azscaleset-vm0**, start Internet Explorer and download **putty.exe** from [**https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html**](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) 
+2. Within the RDP session to **azscaleset-vm0**, start Microsoft Edge and download **putty.exe** from [**https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html**](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) 
 
 3. Use **putty.exe** to verify that you can successfully connect to **azlin-vm0** on its private IP address via the **SSH** protocol (TCP 22).
 
@@ -373,7 +372,7 @@ The main tasks for this exercise are as follows:
 
 > **Note**: The default configuration consisting of built-in rules allows inbound connections within the Azure virtual network environment (including connections via the SSH port TCP 22).  
 
-> **Result**: After you completed this exercise, you have configured static private and public IP addresses of Azure VMs, connected to an Azure VM running Windows Server 2016 Datacenter via a public IP address, and connect to an Azure VM running Linux Ubuntu Server via a private IP address  
+> **Result**: After you completed this exercise, you have configured static private and public IP addresses of Azure VMs, connected to an Azure VM running Windows Server 2022 Datacenter via a public IP address, and connect to an Azure VM running Linux Ubuntu Server via a private IP address  
 
 
 ### Exercise 3: Deploy and configure Azure VM scale sets
@@ -416,7 +415,7 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 
 - Virtual machine scale set name: **azscalesetvmss0**
 
-* Operating system disk image: **Windows Server 2016 Datacenter**
+* Operating system disk image: **Windows Server 2022 Datacenter**
 
 * Subscription: the name of the subscription you are using in this lab
 
@@ -432,39 +431,32 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 
 * Instance count: **1**
 
-* Instance size: **DS2 v2**
+* Instance size: **DS1 v2**
 
 * Deploy as low priority: **No**
 
 * Use managed disks: **Yes**
 
-* Autoscale: **Disabled**
+* Scaling mode: **Manually update the capacity**
 
-* Choose Load balancing options: **Load balancer**
-
-* Public IP address name: **azscalesetvmss0-ip**
-
-* Domain name label: type in the value of the &lt;custom-label&gt; you identified in the previous task
-
+Under the **Networking** tab
 * Virtual network: the name of a new virtual network **azscaleset-vnet0** with the following settings:
 
 * Address range: **10.203.0.0/16**
 
 * Subnet name: **subnet0**
 
-* Subnet address range: **10.203.0.0/24**
-
-* Public IP address per instance: **Off**
-    
-* Accelerated networking: **Off**
-    
-* NIC network security group: **Basic**
-    
-* Select inbound ports: **HTTP**
-    
-* Boot diagnostics: **Off**
-    
-* System assigned managed identity: **Off**
+* Subnet starting address range: **10.203.0.0**
+* Subnet size: **/24 (256 addresses)**
+* Choose Load balancing options: **Azure load balancer**
+* Click **Create a load balancer**
+* Load balancer name: **azscaleset-vnet0-lb**
+* Click **Create**
+* Edit the network interface with the following:
+  * NIC network security group: **Basic**
+  * Select inbound ports: **HTTP (80)**
+* Go to the **Management** tabe and Disable **Boot diagnostics**
+* Click **Review + create**, then click **Create**
 
 > **Note**: Wait for the deployment to complete before you proceed to the next task. This should take about 5 minutes.  
 
@@ -473,13 +465,13 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 
 1. In the Azure portal, navigate to the **azscalesetvmss0** blade.
 
-1. From the **azscalesetvmss0** blade, display its Extension blade.
+1. From the **azscalesetvmss0** blade, display its **Extensions + applications** blade under **Settings**.
 
 1. From the **azscalesetvmss0 - Extension** blade, add the **PowerShell Desired State Configuration** extension with the following settings:
 
-> **Note**: The DSC configuration module is available for upload from **02-vms/files/install_iis_vmss.zip**. The module contains the DSC configuration script that installs the Web Server (IIS) role.  
+> **Note**: The DSC configuration module is available for upload from **02-vms/files/install_iis_vmss.zip**. The module contains the DSC configuration script that installs the Web Server (IIS) role. To upload the file, first create a storage account, then upload `install_iis_vmss.zip` to a public container.
 
-- Configuration Modules or Script: **"install_iis_vmss.zip"**  
+- Configuration Modules or Script: **"install_iis_vmss.zip"** select the file from an Azure Blob Storage container 
 
 - Module-qualified Name of Configuration: **install_iis_vmss.ps1\IISInstall**  
 
@@ -494,8 +486,9 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 - Version: **2.76**  
 
 - Auto Upgrade Minor Version: **Yes**  
+- Click **Create**
 
-1. Navigate to the **azscalesetvmss0 - Instances** blade and initiate the upgrade of the **azscalesetvmss0_0** instance.
+1. Navigate to the **azscalesetvmss0 - Instances** blade and initiate the upgrade of the **azscalesetvmss0_** instance.
 
 > **Note**: The update will trigger application of the DSC configuration script. Wait for upgrade to complete. This should take about 5 minutes. You can monitor the progress from the **azscalesetvmss0 - Instances** blade.  
 

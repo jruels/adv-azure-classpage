@@ -20,10 +20,11 @@ The labs will be shown running in Visual Studio Code but you can always substitu
 
 ### Task 1: Create Resource Manager template
 
-Start by cloning the class repo: 
+Start by cloning the class repo (<a href="https://git-scm.com/downloads">download and install git first</a>): 
 ```
 git clone https://github.com/jruels/adv-azure-classpage.git
 ```
+
 
 In the `labs/01-arm-templates` directory you will find all the required files for this lab. 
 
@@ -33,7 +34,7 @@ In the `labs/01-arm-templates` directory you will find all the required files fo
 2. 
     Rather than creating a template from scratch we will use one of the <a href="https://azure.microsoft.com/en-us/resources/templates/" target="_blank"><span style="color: 0066cc">Azure Quickstart Templates</span></a>. We will use a template designed to Deploy a simple Windows  VM.
 
-3. Create a working directory to keep your templates in and copy `01/arm-templates/azuredeploy.json` to your new working directory. 
+3. Create a working directory to keep your templates in and copy `01/templates/azuredeploy.json` to your new working directory. 
 
 4. Copy `<your_dir>/azuredeploy.json` to  `<your_dir>/storage/storage.json`
 
@@ -71,6 +72,7 @@ The linked storage template we are creating, `storage.json` will create a storag
           "kind": "Storage",
           "properties": {}
         }
+      ]
 ```
 
 ![](index/linkedtemplatestorage1.png)
@@ -89,8 +91,7 @@ The linked storage template we are creating, `storage.json` will create a storag
       },
       "kind": "Storage",
       "properties": {}
-    }
-    ```
+    }]
 ```
 
 4. Next, remove the `variables` section and all variable definitions, as highlighted below,
@@ -162,9 +163,7 @@ The linked storage template we are creating, `storage.json` will create a storag
             }
       }
     }
-    
 ```
-
 ### Task 3: Upload Linked Template to Azure Blob Storage and generate SAS token
 When linking to a template, the Azure Resource Manager service must be able to access it. As such You **cannot** specify a local file or a file that is only available on your local network. You can only provide a URI value that includes either `http` or `https`.
 
@@ -182,57 +181,57 @@ We will perform these steps in Azure Cloud Shell for ease of use. You could also
 
 ```powershell
 $projectNamePrefix = Read-Host -Prompt "Enter a project name (no spaces or special characters):"   # This name is used to generate names for Azure resources, such as storage account name.
-    $location = Read-Host -Prompt "Enter a location (i.e. centralus or westus)" 
-    
-    $resourceGroupName = $projectNamePrefix + "rg"
-    $storageAccountName = $projectNamePrefix + "stracc"
-    $containerName = "linktempblobcntr" # The name of the Blob container to be created.
-    
-    $linkedTemplateURL = "https://raw.githubusercontent.com/jruels/adv-azure-classpage/master/labs/01-arm-templates/.solutions/storage.json" # A completed linked template used in this lab.
-    $fileName = "storage.json" # A file name used for downloading and uploading the linked template.
-    
-    # Download the lab linked template
-    Invoke-WebRequest -Uri $linkedTemplateURL -OutFile "$home/$fileName" # This generates a copy of the storage.json template in your Azure Cloud Shell session
-    
-    # Create a resource group
-    New-AzResourceGroup -Name $resourceGroupName -Location $location # creates a new resource group into which we create a storage account, then a blob container
-    
-    # Create a storage account
-    $storageAccount = New-AzStorageAccount `
-        -ResourceGroupName $resourceGroupName `
-        -Name $storageAccountName `
-        -Location $location `
-        -SkuName "Standard_LRS"
-    
-    $context = $storageAccount.Context
-    
-    # Create a container
-    New-AzureStorageContainer -Name $containerName -Context $context
-    
-    
-    # Upload the linked template
-    Set-AzureStorageBlobContent `
-        -Container $containerName `
-        -File "$home/$fileName" `
-        -Blob $fileName `
-        -Context $context
-    
-    # Generate a SAS token. We set an expiry time of 24 hours, but you could have shorter values for increased security.
-    $templateURI = New-AzureStorageBlobSASToken `
-        -Context $context `
-        -Container $containerName `
-        -Blob $fileName `
-        -Permission r `
-        -ExpiryTime (Get-Date).AddHours(24.0) `
-        -FullUri
-    
-    echo "You need the following values later in the tutorial :"
-    echo "Resource Group Name: $resourceGroupName"
-    echo "Linked template URI with SAS token: $templateURI"
-    echo "finished"
+$location = Read-Host -Prompt "Enter a location (i.e. centralus or westus)" 
+
+$resourceGroupName = $projectNamePrefix + "rg"
+$storageAccountName = $projectNamePrefix + "stracc"
+$containerName = "linktempblobcntr" # The name of the Blob container to be created.
+
+$linkedTemplateURL = "https://raw.githubusercontent.com/jruels/adv-azure-classpage/master/labs/01-arm-templates/.solutions/storage.json" # A completed linked template used in this lab.
+$fileName = "storage.json" # A file name used for downloading and uploading the linked template.
+
+# Download the lab linked template
+Invoke-WebRequest -Uri $linkedTemplateURL -OutFile "$home/$fileName" # This generates a copy of the storage.json template in your Azure Cloud Shell session
+
+# Create a resource group
+New-AzResourceGroup -Name $resourceGroupName -Location $location # creates a new resource group into which we create a storage account, then a blob container
+
+# Create a storage account
+$storageAccount = New-AzStorageAccount `
+  -ResourceGroupName $resourceGroupName `
+  -Name $storageAccountName `
+  -Location $location `
+  -SkuName "Standard_LRS"
+
+$context = $storageAccount.Context
+
+# Create a container
+New-AzureStorageContainer -Name $containerName -Context $context
+
+
+# Upload the linked template
+Set-AzureStorageBlobContent `
+  -Container $containerName `
+  -File "$home/$fileName" `
+  -Blob $fileName `
+  -Context $context
+
+# Generate a SAS token. We set an expiry time of 24 hours, but you could have shorter values for increased security.
+$templateURI = New-AzureStorageBlobSASToken `
+  -Context $context `
+  -Container $containerName `
+  -Blob $fileName `
+  -Permission r `
+  -ExpiryTime (Get-Date).AddHours(24.0) `
+  -FullUri
+
+echo "You need the following values later in the tutorial :"
+echo "Resource Group Name: $resourceGroupName"
+echo "Linked template URI with SAS token: $templateURI"
+echo "finished"
 ```
 
-5. Note the output values after PowerShell completes, they should look similar to:
+1. Note the output values after PowerShell completes, they should look similar to:
 
 - **$resourcegroupName**: `advazurejrsrg`
 - **$templateURI**:
@@ -352,8 +351,11 @@ Start by uploading `azuredeploy.json`  to blog storage.
 1. In the Azure Portal click **Storage accounts** on the blade and then on the new screen click on the storage account you created with the `PowerShell` script. 
 ![](index/azure-stor-account.png)
 
-2. Click **Containers**
-3. Create a new container and give it public access. 
+2. Locate the **Configuration** setting under **Settings**
+3. For this lab, set **Allow Blob anonymous access** to **Enabled**. You can learn more about this feature <a href="https://go.microsoft.com/fwlink/?LinkId=2118254">here</a>.
+4. Click on the **SAVE** button
+5. Click **Containers** under **Data storage**
+6. Create a new container and give it public access. 
 
 ![](index/A9E08C43-4626-4B97-8087-7F3A34DB0731.png)
 
@@ -372,6 +374,229 @@ You will be prompted to enter values for:
 You can choose whatever you'd like. 
 
 **NOTE:** The process takes a while and doesn't seem to be progressing but if you go check in the Azure portal you'll see new resources being created including a new VM named `SimpleWinVM`
+
+Once complete, you will get output in the terminal similar to this:
+
+```bash
+{
+  "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/advazureprj",
+  "location": null,
+  "name": "advazureprj",
+  "properties": {
+    "correlationId": "d122a639-0d5a-4c0b-b5a1-e444b7acead6",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+            "resourceGroup": "advazurerg",
+            "resourceName": "myPublicIP",
+            "resourceType": "Microsoft.Network/publicIPAddresses"
+          },
+          {
+            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
+            "resourceGroup": "advazurerg",
+            "resourceName": "MyVNET",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          }
+        ],
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+        "resourceGroup": "advazurerg",
+        "resourceName": "myVMNic",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/linkedTemplate",
+            "resourceGroup": "advazurerg",
+            "resourceName": "linkedTemplate",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+            "resourceGroup": "advazurerg",
+            "resourceName": "myVMNic",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          }
+        ],
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+        "resourceGroup": "advazurerg",
+        "resourceName": "SimpleWinVM",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      }
+    ],
+    "duration": "PT1M36.4728169S",
+    "error": null,
+    "mode": "Incremental",
+    "onErrorDeployment": null,
+    "outputResources": [
+      {
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+        "resourceGroup": "advazurerg"
+      },
+      {
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+        "resourceGroup": "advazurerg"
+      },
+      {
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+        "resourceGroup": "advazurerg"
+      },
+      {
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
+        "resourceGroup": "advazurerg"
+      },
+      {
+        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Storage/storageAccounts/shivilgbac2nwsawinvm",
+        "resourceGroup": "advazurerg"
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "String",
+        "value": "advazure.westus.cloudapp.azure.com"
+      }
+    },
+    "parameters": {
+      "adminPassword": {
+        "type": "SecureString"
+      },
+      "adminUsername": {
+        "type": "String",
+        "value": "student"
+      },
+      "dnsLabelPrefix": {
+        "type": "String",
+        "value": "advazure"
+      },
+      "location": {
+        "type": "String",
+        "value": "westus"
+      },
+      "windowsOSVersion": {
+        "type": "String",
+        "value": "2016-Datacenter"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.Resources",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "deployments",
+            "zoneMappings": null
+          }
+        ]
+      },
+      {
+        "id": null,
+        "namespace": "Microsoft.Network",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "publicIPAddresses",
+            "zoneMappings": null
+          },
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "virtualNetworks",
+            "zoneMappings": null
+          },
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "networkInterfaces",
+            "zoneMappings": null
+          }
+        ]
+      },
+      {
+        "id": null,
+        "namespace": "Microsoft.Compute",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "virtualMachines",
+            "zoneMappings": null
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "templateHash": "11952791466512880096",
+    "templateLink": {
+      "contentVersion": "1.0.0.0",
+      "id": null,
+      "queryString": null,
+      "relativePath": null,
+      "uri": "https://advazurestracc.blob.core.windows.net/armvm/azuredeploy.json"
+    },
+    "timestamp": "2025-06-16T01:01:34.433408+00:00",
+    "validatedResources": null
+  },
+  "resourceGroup": "advazurerg",
+  "tags": null,
+  "type": "Microsoft.Resources/deployments"
+}
+```
 
 6. As a next step we could now proceed with modularizing the remaining resource definitions in our deployment template, such as our network and virtual machine resource definitions. A way to approach this would be to modularize based on dependencies. A diagram representing dependencies in the template we used is shown below.
 
