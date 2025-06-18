@@ -21,7 +21,7 @@
             "value": "WindowsServer"
         },
         "imageSKU": {
-            "value": "2016-Datacenter"
+            "value": "2022-Datacenter"
         },
         "vmSize": {
             "value": "Standard_B1ms"

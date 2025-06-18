@@ -44,11 +44,11 @@
     },
     "imageSKU": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2022-Datacenter",
       "allowedValues": [
-        "2016-Datacenter",
-        "2016-Datacenter-Server-Core",
-        "2016-Datacenter-Server-Core-smalldisk"
+        "2022-Datacenter",
+        "2022-Datacenter-Server-Core",
+        "2022-Datacenter-Server-Core-smalldisk"
       ],
       "metadata": {
         "description": "Image SKU"

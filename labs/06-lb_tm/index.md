@@ -24,12 +24,13 @@ After completing this lab, you will be able to:
   
 The main tasks for this exercise are as follows:
 
-1. Deploy management Azure VMs running Windows Server 2016 Datacenter with the Web Server (IIS) role installed into an availability set in the first Azure region by using an Azure Resource Manager template
+1. Deploy management Azure VMs running Windows Server 2022 Datacenter with the Web Server (IIS) role installed into an availability set in the first Azure region by using an Azure Resource Manager template
 
-1. Deploy management Azure VMs running Windows Server 2016 Datacenter with the Web Server (IIS) role installed into an availability set in the second Azure region by using an Azure Resource Manager template
+1. Deploy management Azure VMs running Windows Server 2022 Datacenter with the Web Server (IIS) role installed into an availability set in the second Azure region by using an Azure Resource Manager template
 
 
-#### Task 1: Deploy management Azure VMs running Windows Server 2016 Datacenter with the Web Server (IIS) role installed into an availability set in the first Azure region by using an Azure Resource Manager template
+
+#### Task 1: Deploy management Azure VMs running Windows Server 2022 Datacenter with the Web Server (IIS) role installed into an availability set in the first Azure region by using an Azure Resource Manager template
 
 1. In the Azure portal, navigate to the **Create a resource** blade.
 
@@ -41,7 +42,7 @@ The main tasks for this exercise are as follows:
 
 1. From the **Edit template** blade, load the template file **06-lb_tm/files/az-101-03_01_azuredeploy.json**. 
 
-> **Note**: Review the content of the template and note that it defines deployment of two Azure VMs hosting Windows Server 2016 Datacenter Core into an availability set.  
+> **Note**: Review the content of the template and note that it defines deployment of two Azure VMs hosting Windows Server 2022 Datacenter Core into an availability set.  
 
 1. Save the template and return to the **Custom deployment** blade. 
 
@@ -71,7 +72,7 @@ The main tasks for this exercise are as follows:
 
 - Image Offer: **WindowsServer**
 
-- Image SKU: **2016-Datacenter**
+- Image SKU: **2022-Datacenter**
 
 - Vm Size: use **Standard_B1ms** 
 
@@ -89,14 +90,64 @@ The main tasks for this exercise are as follows:
 
 - Network Security Group Name: **az1010301w-vm-nsg**
 
-- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
+> **Important Step:**
+>
+> 1. **Create a new PowerShell DSC script named `ContosoWebsite.ps1`** with the following content:
+>
+>    ```powershell
+>    configuration ContosoWebsite {
+>        param (
+>             [Parameter(Mandatory=$true)]
+>            [string]$NodeName
+>        )
+>
+>        Import-DscResource -ModuleName PSDesiredStateConfiguration
+>
+>        Node $NodeName {
+>            WindowsFeature IIS {
+>                Name = "Web-Server"
+>                Ensure = "Present"
+>            }
+>
+>            File DefaultPage {
+>                Ensure = "Present"
+>                DestinationPath = "C:\\inetpub\\wwwroot\\Default.htm"
+>                Contents = "Hello from Contoso's IIS VM!"
+>                Type = "File"
+>                Force = $true
+>                DependsOn = "[WindowsFeature]IIS"
+>            }
+>        }
+>    }
+>    ```
+>
+> 2. **Zip the file** and name it `ContosoWebsite.ps1.zip`.
+>
+> 3. **Upload the ZIP file to a new public Azure Blob Storage container**:
+>
+>    * Create a new Storage Account.
+>    * Create a Blob container (e.g. `scripts`) with **Public Access Level: Blob (anonymous read access)**.
+>    * Upload `ContosoWebsite.ps1.zip`.
+>    * Copy the blob URL and use it as the value for `Modules Url` in your parameters file.
+>
+>    Example:
+>
+>    ```json
+>    "modulesUrl": {
+>      "value": "https://<your-storage-account>.blob.core.windows.net/scripts/ContosoWebsite.ps1.zip"
+>    }
+>    ```
+
+
+- Modules Url: **https://<your-storage-account>.blob.core.windows.net/scripts/ContosoWebsite.ps1.zip**
 
 - Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
+- Click on **Review + create** then click **Create**
 
 > **Note**: Do not wait for the deployment to complete but proceed to the next task.   
 
 
-#### Task 2: Deploy management Azure VMs running Windows Server 2016 Datacenter with the Web Server (IIS) role installed into an availability set in the second Azure region by using an Azure Resource Manager template
+#### Task 2: Deploy management Azure VMs running Windows Server 2022 Datacenter with the Web Server (IIS) role installed into an availability set in the second Azure region by using an Azure Resource Manager template
 
 1. In the Azure portal, navigate to the **Create a resource** blade.
 
@@ -138,7 +189,7 @@ The main tasks for this exercise are as follows:
 
 - Image Offer: **WindowsServer**
 
-- Image SKU: **2016-Datacenter**
+- Image SKU: **2022-Datacenter**
 
 - Vm Size: use **Standard_B1ms**
 
@@ -156,13 +207,13 @@ The main tasks for this exercise are as follows:
 
 - Network Security Group Name: **az1010302w-vm-nsg**
 
-- Modules Url: **https://github.com/Azure/azure-quickstart-templates/raw/master/dsc-extension-iis-server-windows-vm/ContosoWebsite.ps1.zip**
+- Modules Url: **https://<your-storage-account>.blob.core.windows.net/scripts/ContosoWebsite.ps1.zip**
 
 - Configuration Function: **ContosoWebsite.ps1\\ContosoWebsite**
 
 > **Note**: Do not wait for the deployment to complete but proceed to the next exercise.  
 
-> **Result**: After you completed this exercise, you have used Azure Resource Manager templates to initiate deployment of Azure VMs running Windows Server 2016 Datacenter with the Web Server (IIS) role installed into availability sets in two Azure regions.  
+> **Result**: After you completed this exercise, you have used Azure Resource Manager templates to initiate deployment of Azure VMs running Windows Server 2022 Datacenter with the Web Server (IIS) role installed into availability sets in two Azure regions.  
 
 
 ### Exercise 1: Implement Azure Load Balancing
@@ -179,7 +230,22 @@ The main tasks for this exercise are as follows:
 
 1. Verify Azure load balancing and NAT rules
 
-
+```bash
+az vm extension set \
+  --publisher Microsoft.Powershell \
+  --version 2.83 \
+  --name DSC \
+  --vm-name az1010301w-vm0 \
+  --resource-group az1010301-RG \
+  --settings '{
+    "modulesUrl": "https://fstorage100.blob.core.windows.net/scripts/ContosoWebsite.ps1.zip",
+    "configurationFunction": "ContosoWebsite.ps1\\ContosoWebsite",
+    "properties": {
+      "NodeName": "localhost"
+    }
+  }'
+```
+---
 #### Task 1: Implement Azure load balancing rules in the first region
 
 > **Note**: Before you start this task, ensure that the template deployment you started in the first task of the previous exercise has completed.   
@@ -202,41 +268,30 @@ The main tasks for this exercise are as follows:
 
 - Type: **Public**
 
-- SKU: **Basic**
+- SKU: **Standard**
+- Create a new **Frontend IP Configuration**
 
 - Public IP address: a new public IP address named **az1010301w-lb-pip**
 
-- Assignment: **Dynamic**
-    
-- Add a public IPv6 address: **No**
+- Click **SAVE**
 
 - Click **Review + create** and then **Create**
 
 1. In the Azure portal, navigate to the blade of the newly deployed Azure load balancer **az1010301w-lb**.
 
-1. From the **az1010301w-lb** blade, display the **az1010301w-lb - Backend pools** blade.
+2. From the **az1010301w-lb** blade, display the **az1010301w-lb - Backend pools** under the **Settings** blade.
 
-1. From the **az1010301w-lb - Backend pools** blade, add a backend pool with the following settings:
+3. From the **az1010301w-lb - Backend pools** blade, add a backend pool with the following settings:
 
 - Name: **az1010301w-bepool**
 
-- IP version: **IPv4**
+- Virtual network: **az1010301-vnet**
 
-- Associated to: **Availability set**
+- IP address: **10.101.31.4**
 
-- Availability set: **az1010301w-avset**
+- IP address: **10.101.31.5**
     
-- Click **+ Add a target network IP configuration**
-
-- Virtual machine: **az1010301w-vm0** 
-
-- Network IP configuration: **az1010301w-nic0/ipconfig1 (10.101.31.4)**
-
-- Virtual machine: **az1010301w-vm1** 
-
-- Network IP configuration: **az1010301w-nic1/ipconfig1 (10.101.31.5)**
-    
-- Click **OK**
+- Click **Save**
 
 > **Note**: It is possible that the IP addresses of the Azure VMs are assigned in the reverse order.   
 
@@ -244,7 +299,7 @@ The main tasks for this exercise are as follows:
 
 1. From the **az1010301w-lb - Backend pools** blade, display the **az1010301w-lb - Health probes** blade.
 
-1. From the **az1010301w-lb - Health probes** blade, add a health probe with the following settings:
+2. From the **az1010301w-lb - Health probes** blade, add a health probe with the following settings:
 
 - Name: **az1010301w-healthprobe**
 
@@ -254,11 +309,8 @@ The main tasks for this exercise are as follows:
 
 - Interval: **5** seconds
 
-- Unhealthy threshold: **2** consecutive failures
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
-
-1. From the **az1010301w-lb - Health probes** blade, display the **az1010301w-lb - Load balancing rules** blade.
 
 1. From the **az1010301w-lb - Load balancing rules** blade, add a load balancing rule with the following settings:
 
@@ -282,8 +334,9 @@ The main tasks for this exercise are as follows:
 
 - Idle timeout (minutes): **4**
 
-- Floating IP (direct server return): **Disabled**
+- Floating IP: **Disabled**
 
+---
 
 #### Task 2: Implement Azure load balancing rules in the second region
 
@@ -307,46 +360,36 @@ The main tasks for this exercise are as follows:
 
 - Type: **Public**
 
-- SKU: **Basic**
+- SKU: **Standard**
 
-- Public IP address: a new public IP address named **az1010302w-lb-pip**
+- Add a new **Frontend IP configuration** and a new public IP address named **az1010302w-lb-pip**
 
-- Assignment: **Dynamic**
-    
-- Add a public IPv6 address: **No**
+- Click **Save**
     
 - Click **Review + create** and then **Create**
 
 
 1. In the Azure portal, navigate to the blade of the newly deployed Azure load balancer **az1010302w-lb**.
 
-1. From the **az1010302w-lb** blade, display the **az1010302w-lb - Backend pools** blade.
+2. From the **az1010302w-lb** blade, display the **az1010302w-lb - Backend pools** blade.
 
-1. From the **az1010302w-lb - Backend pools** blade, add a backend pool with the following settings:
+3. From the **az1010302w-lb - Backend pools** blade, add a backend pool with the following settings:
 
 - Name: **az1010302w-bepool**
 
-- IP version: **IPv4**
+- Virtual Network: **az1010302-vnet**
 
-- Associated to: **Availability set**
+- Backend Pool Configuration: **IP Address** 
 
-- Availability set: **az1010302w-avset**
-    
-- Click **+ Add a target network IP configuration**
+- IP address: **10.101.32.4**
 
-- Virtual machine: **az1010302w-vm0** 
-
-- Network IP configuration: **az1010302w-nic0/ipconfig1 (10.101.32.4)**
-
-- Virtual machine: **az1010302w-vm1** 
-
-- Network IP configuration: **az1010302w-nic1/ipconfig1 (10.101.32.5)**
+- IP address: **10.101.32.5**
+- Click **Save**
 
 > **Note**: It is possible that the IP addresses of the Azure VMs are assigned in the reverse order.   
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
-1. From the **az1010302w-lb - Backend pools** blade, display the **az1010302w-lb - Health probes** blade.
 
 1. From the **az1010302w-lb - Health probes** blade, add a health probe with the following settings:
 
@@ -358,11 +401,9 @@ The main tasks for this exercise are as follows:
 
 - Interval: **5** seconds
 
-- Unhealthy threshold: **2** consecutive failures
+- Click **Save**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
-
-1. From the **az1010302w-lb - Health probes** blade, display the **az1010302w-lb - Load balancing rules** blade.
 
 1. From the **az1010302w-lb - Load balancing rules** blade, add a load balancing rule with the following settings:
 
@@ -371,6 +412,7 @@ The main tasks for this exercise are as follows:
 - IP Version: **IPv4**
 
 - Frontend IP address: **LoadBalancerFrontEnd**
+- Backend Pool: **az1010302w-bepool**
 
 - Protocol: **TCP**
 
@@ -378,16 +420,16 @@ The main tasks for this exercise are as follows:
 
 - Backend port: **80**
 
-- Backend pool: **az1010302w-bepool (2 virtual machines)**
-
 - Health probe: **az1010302w-healthprobe (TCP:80)**
 
 - Session persistence: **None**
 
 - Idle timeout (minutes): **4**
 
-- Floating IP (direct server return): **Disabled**
+- Enable Floating IP: **Disabled**
+- Click **Save**
 
+---
 
 #### Task 3: Implement Azure NAT rules in the first region
 
@@ -400,55 +442,34 @@ The main tasks for this exercise are as follows:
 1. From the **az1010301w-lb - Inbound NAT rules** blade, add the first inbound NAT rule with the following settings:
 
 - Name: **az1010301w-vm0-RDP**
-
-- Frontend IP address: **LoadBalancerFrontEnd**
-
-- IP Version: **IPv4**
-
-- Service: **Custom**
-
-- Protocol: **TCP**
-
-- Port: **33890**
-
 - Target virtual machine: **az1010301w-vm0**
-
 - Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
-
-- Port mapping: **Custom**
-
-- Floating IP (direct server return): **Disabled**
-
-- Target port: **3389**
-
+- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend Port: **33890**
+- Service Tag: **Custom**
+- Backend port: **3389**
+- Protocol: **TCP**
+- Enable Floating IP: **Disabled**
+- Click **Save**
+  
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
 1. From the **az1010301w-lb - Inbound NAT rules** blade, add the second inbound NAT rule with the following settings:
 
 - Name: **az1010301w-vm1-RDP**
-
-- Frontend IP address: **LoadBalancerFrontEnd**
-
-- IP Version: **IPv4**
-
-- Service: **Custom**
-
-- Protocol: **TCP**
-
-- Port: **33891**
-
 - Target virtual machine: **az1010301w-vm1**
-
 - Network IP configuration: **ipconfig1 (10.101.31.4)** or **ipconfig1 (10.101.31.5)**
-
-- Port mapping: **Custom**
-
-- Floating IP (direct server return): **Disabled**
-
-- Target port: **3389**
+- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend Port: **33891**
+- Service Tag: **Custom**
+- Backend port: **3389**
+- Protocol: **TCP**
+- Enable Floating IP: **Disabled**
+- Click **Save**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
+---
 
 #### Task 4: Implement Azure NAT rules in the second region
 
@@ -459,52 +480,30 @@ The main tasks for this exercise are as follows:
 1. From the **az1010302w-lb - Inbound NAT rules** blade, add the first inbound NAT rule with the following settings:
 
 - Name: **az1010302w-vm0-RDP**
-
-- Frontend IP address: **LoadBalancedFrontEnd**
-
-- IP Version: **IPv4**
-
-- Service: **Custom**
-
-- Protocol: **TCP**
-
-- Port: **33890**
-
 - Target virtual machine: **az1010302w-vm0**
-
 - Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
-
-- Port mapping: **Custom**
-
-- Floating IP (direct server return): **Disabled**
-
-- Target port: **3389**
+- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend Port: **33890**
+- Service Tag: **Custom**
+- Backend port: **3389**
+- Protocol: **TCP**
+- Enable Floating IP: **Disabled**
+- Click **Save**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
 1. From the **az1010302w-lb - Inbound NAT rules** blade, add the second inbound NAT rule with the following settings:
 
 - Name: **az1010302w-vm1-RDP**
-
-- Frontend IP address: **LoadBalancedFrontEnd**
-
-- IP Version: **IPv4**
-
-- Service: **Custom**
-
-- Protocol: **TCP**
-
-- Port: **33891**
-
 - Target virtual machine: **az1010302w-vm1**
-
 - Network IP configuration: **ipconfig1 (10.101.32.4)** or **ipconfig1 (10.101.32.5)**
-
-- Port mapping: **Custom**
-
-- Floating IP (direct server return): **Disabled**
-
-- Target port: **3389**
+- Frontend IP address: **LoadBalancerFrontEnd**
+- Frontend Port: **33891**
+- Service Tag: **Custom**
+- Backend port: **3389**
+- Protocol: **TCP**
+- Enable Floating IP: **Disabled**
+- Click **Save**
 
 > **Note**: Wait for the operation to complete. This should take less than a minute.  
 
@@ -513,7 +512,7 @@ The main tasks for this exercise are as follows:
 
 1. In the Azure portal, navigate to the blade of the Azure load balancer **az1010301w-lb**.
 
-1. On the **az1010301w-lb** blade, identify the public IP address assigned to the load balancer frontend.
+1. On the **az1010301w-lb** Frontend IP configuration blade, identify the public IP address assigned to the load balancer frontend.
 
 1. Browse to the IP address you identified in the previous step.
 
@@ -526,6 +525,7 @@ The main tasks for this exercise are as follows:
 
 > **Result**: After you completed this exercise, you have implemented load balancing rules and NAT rules of Azure in two Azure regions and verified load balancing rules and NAT rules of Azure load balancers in the first region.  
 
+---
 
 ### Exercise 2: Implement Azure Traffic Manager load balancing
 
@@ -537,6 +537,7 @@ The main tasks for this exercise are as follows:
 
 1. Verify Azure Traffic Manager load balancing
 
+---
 
 #### Task 1: Assign DNS names to public IP addresses of Azure load balancers
 
@@ -562,6 +563,8 @@ The main tasks for this exercise are as follows:
 
 1. Click **Save** at the top to apply DNS entry.
 
+---
+
 #### Task 2: Implement Azure Traffic Manager load balancing
 
 1. In the Azure portal, navigate to the **Create a resource** blade.
@@ -586,7 +589,7 @@ The main tasks for this exercise are as follows:
 
 1. In the Azure portal, navigate to the blade of the newly provisioned Traffic Manager profile.
 
-1. From the Traffic Manager profile blade, display its **Configuration** blade and review the configuration settings.
+1. From the Traffic Manager profile blade, display its **Configuration** blade under settings.
 
 > **Note**: The default TTL of the Traffic Manager profile DNS records is 60 seconds  
 
@@ -630,6 +633,7 @@ Click **OK** to apply changes
 
 1. On the **Endpoints** blade, examine the entries in the **MONITORING STATUS** column for both endpoints. Wait until both are listed as **Online** before you proceed to the next task.
 
+---
 
 #### Task 3: Verify Azure Traffic Manager load balancing
 
@@ -643,7 +647,7 @@ Click **OK** to apply changes
 1. In the Cloud Shell pane, run the following command, replacing the &lt;TM_DNS_name&lt; placeholder with the value of the DNS name assigned to the Traffic Manager profile you identified in the previous task, making sure to remove `http://`:
 
    ```
-   nslookup <TM_DNS_name>
+   nslookup <TM_DNS_name>.<region_name>.cloudapp.azure.com
    ```
 
 1. Review the output and note the **Name** entry. This should match the DNS name of the one of the Traffic Manager profile endpoints you created in the previous task.
@@ -651,11 +655,13 @@ Click **OK** to apply changes
 1. Wait for at least 60 seconds and run the same command again:
 
    ```
-   nslookup <TM_DNS_name>
+   nslookup <TM_DNS_name>.<region_name>.cloudapp.azure.com
    ```
 1. Review the output and note the **Name** entry. This time, the entry should match the DNS name of the other Traffic Manager profile endpoint you created in the previous task.
 
 > **Result**: After you completed this exercise, you have implemented and verified Azure Traffic Manager load balancing  
+
+---
 
 ## Exercise 3: Remove lab resources
 

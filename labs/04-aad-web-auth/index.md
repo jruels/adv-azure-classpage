@@ -1,226 +1,313 @@
-# Lab 4a: Authenticate web app with AAD
-In this quickstart, you'll learn how to secure a [Restify](http://restify.com/) API endpoint with [Passport](http://passportjs.org/) using the [passport-azure-ad](https://github.com/AzureAD/passport-azure-ad) module to handle communication with Azure Active Directory (Azure AD).
+# Lab 3: Microsoft Entra ID Authenticated Web App
 
-The scope of this quickstart covers the concerns regarding securing API endpoints. The concerns of signing in and retaining authentication tokens are not implemented here and are the responsibility of a client application. 
+In this lab, you will build a secure web application consisting of a **React frontend** and a **Node.js backend API** that uses **Microsoft Entra ID (Azure AD)** for authentication. This end-to-end lab is structured to give students a clear understanding of how enterprise identity systems like Entra ID can be integrated with modern web apps.
 
-#### Configure the project to use Active Directory
+---
 
-To get started configuring the application, there are a few account-specific values you can obtain from the Azure CLI. The easiest way to get started with the CLI is to use the Azure Cloud Shell.
+## Lab Overview
 
-Use Azure Cloud Shell for the following labs.
+By the end of this lab, you will:
 
-### Create the sample project
+* Register and configure two applications in Entra ID: one for the frontend and one for the backend API.
+* Secure a Node.js Express API with Entra ID using bearer token validation.
+* Create a React frontend that uses Microsoft Authentication Library (MSAL) to authenticate users and acquire tokens.
+* Make authenticated API requests from the frontend using access tokens.
 
-The server application requires a few package dependencies to support Restify and Passport as well as account information that is passed to Azure AD.
+> **NOTE:** This lab assumes **no prior experience** with Azure AD or token-based authentication. Detailed steps, common pitfalls, and explanations are included.
 
-To begin, add the following code into a file named `package.json`:
+---
 
-```json
-{
-  "name": "active-directory-webapi-nodejs",
-  "version": "0.0.1",
-  "scripts": {
-    "start": "node app.js"
+## Prerequisites
+
+* Azure subscription with permission to register applications
+* Node.js (v18+ recommended)
+* A code editor (e.g., VS Code)
+* Basic familiarity with JavaScript
+
+> **Optional for Windows Users:**
+> You may use WSL if preferred, but this lab works on Windows/macOS/Linux natively.
+
+---
+
+## Step 1: Register Backend API in Entra ID
+
+1. Go to [Microsoft Entra admin center](https://entra.microsoft.com/).
+2. Under **"Applications"**, click **"App registrations"** > **"New registration"**.
+3. Name it something like: `MySecureAPI`
+4. Choose the **Supported account types** as:
+   * "Accounts in this organizational directory only"
+5. Click **Register**.
+
+### Configure Exposed API
+
+1. After registration, go to the app's **"Expose an API"** section.
+2. Click **"Add"** for the Application ID URI. Use the default or custom name (e.g. `api://<client_id>`).
+3. Click **Save**
+4. Click **"Add a scope"**:
+
+   * Scope name: `access_as_user`
+   * Admin consent display name: `Access Secure API`
+   * Admin consent description: `Allows access to the protected API.`
+   * Who can consent: Admins and users
+   * Click **Add scope**
+Your full scope URI will look like:
+![alt text](image.png)
+
+---
+
+## Step 2: Register Frontend App in Entra ID
+
+1. Go back to **App registrations** > **New registration**.
+2. Name it: `MyReactClient`
+3. Supported account types:
+
+   * "Accounts in this organizational directory only"
+4. Redirect URI:
+
+   * Type: `Single-page application (SPA)`
+   * URI: `http://localhost:3000`
+5. Click **Register**.
+
+### Configure Frontend Authentication
+
+1. Under **"Authentication"**:
+
+   * Enable "Access tokens (used for implicit flows)"
+   * Enable "ID tokens"
+   * Click **SAVE**
+2. Under **"API permissions"**:
+
+   * Click **Add a permission** > **APIs my organization uses**
+   * Choose `MySecureAPI` from earlier
+   * Select `Delegated permissions` > `access_as_user`
+   * Click **Add permissions**
+   * Click **Grant admin consent** if you are an admin
+
+### Record the following:
+
+* **Frontend App (Client) ID**
+* **Backend App ID URI**
+* **Tenant ID**
+You can find the values from the overview page of each app registration.
+---
+
+## Step 3: Create Backend Node.js API
+
+Open a new terminal window and run the following commands.
+
+```bash
+mkdir backend-api && cd backend-api
+npm init -y
+npm install express morgan cors passport passport-azure-ad dotenv
+```
+
+### Create an `backend-api/.env` file and paste the following:
+
+```env
+PORT=5000
+TENANT_ID=<your_tenant_id>
+CLIENT_ID=<backend_api_app_id>
+AUDIENCE=api://<backend_app_client_id>
+```
+
+Replace <your_tenant_id>, <backend_api_app_id> and api://<backend_app_client_id> with values from your app registrations.
+
+### Create a new file named `backend-api/server.js` and paste the following code
+
+```js
+require("dotenv").config();
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const passport = require("passport");
+const BearerStrategy = require("passport-azure-ad").BearerStrategy;
+
+const app = express();
+app.use(morgan("dev"));
+app.use(cors());
+app.use(express.json());
+
+passport.use(new BearerStrategy({
+    identityMetadata: `https://login.microsoftonline.com/${process.env.TENANT_ID}/v2.0/.well-known/openid-configuration`,
+    clientID: process.env.CLIENT_ID,
+    audience: process.env.AUDIENCE,
+    validateIssuer: false, // Set to true if you want to validate the issuer - recommended for production
+    passReqToCallback: false,
+    loggingLevel: 'info'
+}, (token, done) => {
+    return done(null, token);
+}));
+
+app.use(passport.initialize());
+
+app.get("/api/secure", passport.authenticate("oauth-bearer", { session: false }), (req, res) => {
+    res.json({ message: "You have accessed a protected API!", user: req.user });
+});
+
+app.get("/api/public", (req, res) => {
+    res.json({ message: "This is a public endpoint." });
+});
+
+app.listen(process.env.PORT, () => console.log(`API running on http://localhost:${process.env.PORT}`));
+```
+
+In the terminal run the API using the following command:
+
+```bash
+node server.js
+```
+
+Test:
+
+* Open browser: `http://localhost:5000/api/public` → should work.
+* `/api/secure` requires a token from the frontend.
+
+---
+
+## Step 4: Create React Frontend
+
+Navigate to your project root directory and run the followingn commands in a terminal window:cd 
+
+```bash
+npx create-react-app frontend --template typescript
+cd frontend
+npm install @azure/msal-browser @azure/msal-react axios
+```
+
+### Create a new file `frontend/src/authConfig.ts`
+
+```ts
+export const msalConfig = {
+  auth: {
+    clientId: "<frontend_app_client_id>",
+    authority: "https://login.microsoftonline.com/<tenant_id>",
+    redirectUri: "http://localhost:3000",
   },
-  "dependencies": {
-    "passport": "0.4.0",
-    "passport-azure-ad": "4.0.0",
-    "restify": "7.7.0"
-  }
-}
-```
-Once `package.json` is created, run `npm install` in your command prompt to install the package dependencies.
+  cache: {
+    cacheLocation: "sessionStorage",
+    storeAuthStateInCookie: false,
+  },
+};
 
-Enter the following command in the cloud shell:
-
-```azurecli-interactive
-az ad app create --display-name node-aad-demo --homepage http://localhost --identifier-uris http://node-aad-demo
-```
-
-The [arguments](/cli/azure/ad/app?view=azure-cli-latest#az-ad-app-create) for the `create` command include:
-
-| Argument  | Description |
-|---------|---------|
-|`display-name` | Friendly name of the registration |
-|`homepage` | Url where users can sign in and use your application |
-|`identifier-uris` | Space separated unique URIs that Azure AD can use for this application |
-
-Before you can connect to Azure Active Directory, you need the following information:
-
-| Name  | Description | Variable Name in Config File |
-| ------------- | ------------- | ------------- |
-| Tenant Name  | [Tenant name](quickstart-create-new-tenant.md) you want to use for authentication | `tenantName`  |
-| Client ID  | Client ID is the OAuth term used for the AAD _Application ID_. |  `clientID`  |
-
-### Find the AAD Tenant Name 
-To find your AAD Tenant name in the blade go to "Azure Active Directory" and then click on "Custom domain names" and you will see a domain name similar to: 
-`azstudent2innovationinsoftw.onmicrosoft.com`
-
-From the registration response in the Azure Cloud Shell, copy the `appId` value and create a new file named `config.js`. Next, add in the following code and replace your values with the bracketed tokens:
-
-```JavaScript
-const tenantName    = "<YOUR_TENANT_NAME>";
-const clientID      = "<YOUR_APP_ID_FROM_CLOUD_SHELL>";
-const serverPort    = 3000;
-
-module.exports.serverPort = serverPort;
-
-module.exports.credentials = {
-  identityMetadata: `https://login.microsoftonline.com/${tenantName}.onmicrosoft.com/.well-known/openid-configuration`, 
-  clientID: clientID
+export const protectedResources = {
+  api: {
+    endpoint: "http://localhost:5000/api/secure",
+    scopes: ["api://<backend_app_client_id>/access_as_user"],
+  },
 };
 ```
 
-For more information regarding the individual configuration settings, review the [passport-azure-ad](https://github.com/AzureAD/passport-azure-ad#5-usage) module documentation.
+Replace <frontend_app_client_id> and <tenant_id> with values from the MyReactClient app registration overview page.
+Repalce <backend_app_client_id> with values from the MySecureAPI app registration overview page.
 
-### Implement the server
+### `src/App.tsx`
 
-The [passport-azure-ad](https://github.com/AzureAD/passport-azure-ad#5-usage) module  features two authentication strategies: [OIDC](https://github.com/AzureAD/passport-azure-ad#51-oidcstrategy) and [Bearer](https://github.com/AzureAD/passport-azure-ad#52-bearerstrategy) strategies. The server implemented in this article uses the Bearer strategy to secure the API endpoint.
+```tsx
+import React from "react";
+import { useMsal, MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { msalConfig, protectedResources } from "./authConfig";
+import axios from "axios";
 
-### Step 1: Import dependencies
+const msalInstance = new PublicClientApplication(msalConfig);
 
-Create a new file named `app.js` and paste in the following text:
+function SecureContent() {
+  const { instance, accounts } = useMsal();
 
-```JavaScript
-'use strict';
-
-const
-      restify = require('restify')
-    , restifyPlugins = require ('restify').plugins
-    , passport = require('passport')
-    , BearerStrategy = require('passport-azure-ad').BearerStrategy
-    , config = require('./config')
-    , authenticatedUserTokens = []
-    , serverPort = process.env.PORT || config.serverPort
-;
-```
-
-In this section of code:
-
-- The `restify` and plugins modules are referenced in order to set up a Restify server.
-- The `passport` and `passport-azure-ad` modules are responsible for communicating with Azure AD.
-- The `config` variable is initialized with values from the `config.js` file created in the previous step.
-- An array is created for `authenticatedUserTokens` to store user tokens as they are passed into secured endpoints.
-- The `serverPort` is either defined from the process environment's port or from the configuration file.
-
-### Step 2: Instantiate an authentication strategy
-
-As you secure an endpoint, you must provide a strategy responsible for determining whether or not the current request originates from an authenticated user. Here the `authenticatonStrategy` variable is an instance of the `passport-azure-ad` `BearerStrategy` class. Add the following code after what was added above.
-
-```JavaScript
-const authenticationStrategy = new BearerStrategy(config.credentials, (token, done) => {
-    let currentUser = null;
-
-    let userToken = authenticatedUserTokens.find((user) => {
-        currentUser = user;
-        user.sub === token.sub;
+  const callApi = async () => {
+    const response = await instance.acquireTokenSilent({
+      account: accounts[0],
+      scopes: protectedResources.api.scopes,
     });
+    const result = await axios.get(protectedResources.api.endpoint, {
+      headers: { Authorization: `Bearer ${response.accessToken}` },
+    });
+    alert(JSON.stringify(result.data));
+  };
 
-    if(!userToken) {
-        authenticatedUserTokens.push(token);
-    }
+  return (
+    <>
+      <p>Welcome, {accounts[0]?.username}!</p>
+      <button onClick={callApi}>Call Secure API</button>
+      <button onClick={() => instance.logout()}>Logout</button>
+    </>
+  );
+}
 
-    return done(null, currentUser, token);
-});
+function App() {
+  const { instance } = useMsal();
+
+  const handleLogin = () => {
+    instance.loginRedirect({ scopes: protectedResources.api.scopes });
+  };
+
+  return (
+    <div>
+      <h1>Secure React App</h1>
+      <AuthenticatedTemplate>
+        <SecureContent />
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <button onClick={handleLogin}>Login</button>
+      </UnauthenticatedTemplate>
+    </div>
+  );
+}
+
+export default function WrappedApp() {
+  return (
+    <MsalProvider instance={msalInstance}>
+      <App />
+    </MsalProvider>
+  );
+}
 ```
 
-This implementation uses auto-registration by adding authentication tokens into the `authenticatedUserTokens` array if they do not already exist.
+Run the frontend:
 
-Once a new instance of the strategy is created, you must pass it into Passport via the `use` method. Add the following code to `app.js` to use the strategy in Passport.
-
-```JavaScript
-passport.use(authenticationStrategy);
+```bash
+npm start
 ```
 
-### Step 3: Server configuration
+Open browser to `http://localhost:3000`
 
-With the authentication strategy defined, you can now set up the Restify server with some basic settings and set to use Passport for security.
+Login → Call API → You should see the JSON response from the protected API!
 
-```JavaScript
-const server = restify.createServer({ name: 'Azure Active Directory with Node.js Demo' });
-server.use(restifyPlugins.authorizationParser());
-server.use(passport.initialize());
-server.use(passport.session());
-```
-This server is initialized and configured to parse authorization headers and then set to use Passport.
+---
 
-### Step 4: Define routes
+## Troubleshooting Tips
 
-You can now define routes and decide which to secure with Azure AD. This project includes two routes where the root level is open and the `/api` route is set to require authentication.
+* **CORS errors:**
+  Ensure backend has `cors()` middleware enabled.
+* **Invalid audience error:**
+  Double-check the `aud` in your token matches your API’s expected audience URI (`api://<client_id>`).
+* **Silent token acquisition fails:**
+  Ensure scopes are correctly set in Entra ID and match frontend code.
+* **401 Unauthorized when calling `/api/secure`:**
+  - Verify your `backend-api/.env` values:
+    ```ini
+    TENANT_ID=<your_tenant_id>
+    CLIENT_ID=<your_backend_app_client_id>       # Application (client) ID of the API app registration
+    AUDIENCE=api://<your_backend_app_client_id>  # Application ID URI exactly as in "Expose an API"
+    ```
+  - Restart the Node.js server after any `.env` changes.
+  - Enable debug logging for token validation by setting `loggingLevel: 'debug'` in your `BearerStrategy` options to see detailed validation output.
+  - Decode your access token at https://jwt.ms/ and confirm that:
+    - The `aud` claim matches your `AUDIENCE` value.
+    - The `scp` or `roles` claim contains `access_as_user`.
+  - In your React frontend, ensure you request the exact scope URI:
+    ```ts
+    instance.loginRedirect({ scopes: ['api://<your_backend_app_client_id>/access_as_user'] });
+    ```
+  - Check the browser console and terminal logs for any errors or warnings.
 
-In `app.js` add the following code for the root level route:
+---
 
-```JavaScript
-server.get('/', (req, res, next) => {
-    res.send(200, 'Try: curl -isS -X GET http://127.0.0.1:3000/api');
-    next();
-});
-```
+## Cleanup  
 
-The root route allows all requests through the route and returns a message that includes a command to test the `/api` route. By contrast, the `/api` route is locked down using [`passport.authenticate`](http://passportjs.org/docs/authenticate). Add the following code after the root route.
+To avoid lingering resources:
 
-```JavaScript
-server.get('/api', passport.authenticate('oauth-bearer', { session: false }), (req, res, next) => {
-    res.json({ message: 'response from API endpoint' });
-    return next();
-});
-```
+* Delete the two app registrations in Entra ID.
+* Stop the local frontend/backend servers.
 
-This configuration only allows authenticated requests that include a bearer token access to `/api`. The option of `session: false` is used to disable sessions to require that a token is passed with each request to the API.
-
-Finally, the server is set to listen on the configured port by calling the `listen` method.
-
-```JavaScript
-server.listen(serverPort);
-```
-
-## Run the sample
-
-Now that the server is implemented, you can start the server by opening up a command prompt and enter:
-
-```shell
-npm start & 
-```
-
-With the server running, you can submit a request to the server to test the results. To demonstrate the response from the root route, open a bash shell and enter the following code:
-
-```shell
-curl -isS -X GET http://127.0.0.1:3000/
-```
-
-If you have configured your server correctly, the response should look similar to:
-
-```shell
-HTTP/1.1 200 OK
-Server: Azure Active Directory with Node.js Demo
-Content-Type: application/json
-Content-Length: 49
-Date: Tue, 10 Oct 2017 18:35:13 GMT
-Connection: keep-alive
-
-Try: curl -isS -X GET http://127.0.0.1:3000/api
-```
-
-Next, you can test the route that requires authentication by entering the following command into your bash shell:
-
-```shell
-curl -isS -X GET http://127.0.0.1:3000/api
-```
-
-If you have configured the server correctly, then the server should respond with a status of `Unauthorized`.
-
-```shell
-{"name":"AzureAD: Metadata Parser","hostname":"cc-61f5c233-dc7f95bbb-s2zvx","pid":256,"level":50,"msg":"cannot get AAD Federation metadata from endpoint you specified","time":"2019-10-22T03:15:48.418Z","v":0}
-{"name":"AzureAD: Metadata Parser","hostname":"cc-61f5c233-dc7f95bbb-s2zvx","pid":256,"level":50,"msg":"cannot get AAD Federation metadata from endpoint you specified","time":"2019-10-22T03:15:48.418Z","v":0}
-HTTP/1.1 401 Unauthorized
-Server: Azure Active Directroy with Node.js Demo
-Date: Tue, 22 Oct 2019 03:15:48 GMT
-Connection: keep-alive
-Content-Length: 12
-
-Unauthorized
-```
-
-Now that you have created a secure API, you can implement a client that is able to pass authentication tokens to the API.
-
-## Next steps
+---
