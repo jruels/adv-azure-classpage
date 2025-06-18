@@ -429,8 +429,6 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 * Password: **Pa55w.rd1234**
 * Instance size: **DS1 v2**
 * Licensing: **Unchecked**
-* Deploy as low priority: **No**
-* Use managed disks: **Yes**
 
 On the **Storage** page: 
 
