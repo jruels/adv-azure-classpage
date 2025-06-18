@@ -14,13 +14,16 @@ In this lab we will create an Azure Resource manager template, we will then sepa
 - approx. 45 minutes
 
 ### Optional: 
-It is not required but a great editor for Mac or Windows is Visual Studio Code. If you'd like to use download from here https://code.visualstudio.com
+It is not required, but a great editor for Mac or Windows is Visual Studio Code. 
 
-The labs will be shown running in Visual Studio Code but you can always substitute for `vim` or your favorite editor. 
+The labs will be shown running in Visual Studio Code, but you can always substitute for `vim` or your favorite editor. 
 
 ### Task 1: Create Resource Manager template
 
-Start by cloning the class repo (<a href="https://git-scm.com/downloads">download and install git first</a>): 
+Create a working directory (e.g `C:\Users\TEKstudent\Downloads\repos`)
+
+Clone the repository into your working directory.
+
 ```
 git clone https://github.com/jruels/adv-azure-classpage.git
 ```
@@ -28,17 +31,17 @@ git clone https://github.com/jruels/adv-azure-classpage.git
 
 In the `labs/01-arm-templates` directory you will find all the required files for this lab. 
 
-1. In **Visual Studio Code**, go to **File** > **Preferences** > **Extensions** and in the search box type **Azure Resource Manager** tools install the  <a href="https://marketplace.visualstudio.com/items?itemName=msazurermtools.azurerm-vscode-tools" target="_blank"><span style="color: 0066cc">Azure Resource Manager Tools</span></a>
-![](index/vsc_resmgtext.png)
+1. In the **Visual Studio Code** sidebar, go to **Extensions** and type **Azure Resource Manager** in the search box. Install the <a href="https://marketplace.visualstudio.com/items?itemName=msazurermtools.azurerm-vscode-tools" target="_blank"><span style="color: 0066cc">Azure Resource Manager Tools</span></a> extension
+  ![](index/vsc_resmgtext.png)
   
 2. 
     Rather than creating a template from scratch we will use one of the <a href="https://azure.microsoft.com/en-us/resources/templates/" target="_blank"><span style="color: 0066cc">Azure Quickstart Templates</span></a>. We will use a template designed to Deploy a simple Windows  VM.
 
-3. Create a working directory to keep your templates in and copy `01/templates/azuredeploy.json` to your new working directory. 
+3. Create a new working directory (e.g. `C:\Users\TEKstudent\Downloads\lab1\templates`) to keep your templates in and copy `01/templates/azuredeploy.json` to your new working directory.  
 
 4. Copy `<your_dir>/azuredeploy.json` to  `<your_dir>/storage/storage.json`
 
-You should now have two identital json files   
+You should now have two identical json files   
 
 - `$WORKINGDIR/azuredeploy.json`   
 - `$WORKINGDIR/storage/storage.json`   
@@ -74,7 +77,7 @@ The linked storage template we are creating, `storage.json` will create a storag
         }
       ]
 ```
- 
+
 1. Rename the `name` element of storageAccount from `variables` to `parameters`
 
 ```json
