@@ -599,8 +599,17 @@ Once complete, you will get output in the terminal similar to this:
 
 6. As a next step we could now proceed with modularizing the remaining resource definitions in our deployment template, such as our network and virtual machine resource definitions. A way to approach this would be to modularize based on dependencies. A diagram representing dependencies in the template we used is shown below.
 
+    +------------------+
+    | storage.json     |
+    | (StorageAccount) |
+    +--------+---------+
+             |
+             v
+    +--------+--------+       +------------------+
+    |     vm.json     |<------| network.json     |
+    | (VirtualMachine)|       | (NIC, VNet, PIP) |
+    +-----------------+       +------------------+
 
-![](index/templatedependencies.png)
 
 ### Cleanup 
 Delete the newly created resource group to avoid incurring any additional charges. 
