@@ -10,7 +10,7 @@ Lab files:
 -  **02-vms/files/install_iis_vmss.zip**
 
 ### Objectives
-  
+
 After completing this lab, you will be able to:
 
 -  Deploy Azure VMs by using the Azure portal, Azure PowerShell, and Azure Resource Manager templates
@@ -21,7 +21,7 @@ After completing this lab, you will be able to:
 
 
 ### Exercise 1: Deploy Azure VMs by using the Azure portal, Azure PowerShell, and Azure Resource Manager templates
-  
+
 The main tasks for this exercise are as follows:
 
 1. Deploy an Azure VM running Windows Server 2022 Datacenter into an availability set by using the Azure portal
@@ -53,20 +53,20 @@ The main tasks for this exercise are as follows:
 
 
 	- Availability options: **Availability set**  
-
+	
 	- Availability set: Click **Create New**, and name the new availability set **azscaleset-avset0** with **2** fault domains and **5** update domains. Click **OK**.  
 	- Security type: **Standard**
-
+	
 	- Image: **[smalldisk] Windows Server 2022 Datacenter**  
-
+	
 	- Size: **Standard DS1 v2**  
-
+	
 	- Username: **Student**  
-
+	
 	- Password: **Pa55w.rd1234**  
-
+	
 	- Public inbound ports: **None**
-
+	
 	- Would you like to use an existing Windows Server license?: **Leave default**
 
 1. Click **Next: Disks >**.    
@@ -260,7 +260,7 @@ New-AzVM -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location
 
 
 ### Exercise 2: Configure networking settings of Azure VMs running Windows and Linux operating systems
-  
+
 The main tasks for this exercise are as follows:
 
 1. Configure static private and public IP addresses of Azure VMs
@@ -276,7 +276,7 @@ The main tasks for this exercise are as follows:
 
 2. On the azscaleset-vm0-ip blade, click **Configuration** under **Settings**.
 
-3. Change the assignment of the public IP address to **Static** if it's set to **Dynamic**, and then click **Save**.
+3. Confirm the public IP address is set to **Static**.
 
 > **Note**: Take a note of the public IP address assigned to the network interface of **azscaleset-vm0**. You will need it later in this exercise.  
 
@@ -286,11 +286,11 @@ The main tasks for this exercise are as follows:
 
 8. On the **azlin-vm0 - Networking** blade, click the entry representing network interface.
 
-9. From the blade displaying the properties of the network interface of **azlin-vm0**, navigate to its **IP configurations** blade.
+9. From the blade displaying the properties of the network interface of **azlin-vm0**, navigate to **Settings** -> **IP configurations**.
 
-10. On the **IP configurations** blade, configure the **ipconfig1** private IP address to be static and set it to **10.103.0.100**, and then click **Save**.
+10. On the **IP configurations** blade, click **ipconfig1** and configure it with a static private IP of  **10.103.0.100**, and then click **Save**.
 
-> **Note**: Changing the private IP address assignment requires restarting the Azure VM.  
+11. Restart the VM to update the IP to the new static IP address.
 
 > **Note**: It is possible to connect to Azure VMs via either statically or dynamically assigned public and private IP addresses. Choosing static IP assignment is commonly done in scenarios where these IP addresses are used in combination with IP filtering, routing, or if they are assigned to network interfaces of Azure VMs that function as DNS servers.  
 
@@ -321,11 +321,13 @@ The main tasks for this exercise are as follows:
 
 * Priority: **100**
 
-* Name: **AllowInternetRDPInBound**
+* Name: **AllowInternetRDPInbound**
+
+Click **Add**
 
 5. In the Azure portal, display the **Overview** pane of the **azscaleset-vm0** blade. 
 
-6. From the **Overview** pane of the **azscaleset-vm0** blade, click **Connect** and generate an RDP file and use it to connect to **azscaleset-vm0**.
+6. From the **Overview** pane of the **azscaleset-vm0** blade, click **Connect** and download the RDP file and use it to connect to **azscaleset-vm0**.
 
 7. When prompted, authenticate by specifying the following credentials:
 
@@ -335,7 +337,7 @@ The main tasks for this exercise are as follows:
 
 
 #### Task 3: Connect to an Azure VM running Linux Ubuntu Server via a private IP address
- 
+
 1. Within the RDP session to **azscaleset-vm0**, start **Command Prompt**.
 
 1. From the Command Prompt, run the following:
@@ -348,21 +350,20 @@ The main tasks for this exercise are as follows:
 
 > **Note**: This is expected. Azure provides built-in DNS name resolution within a virtual network.   
 
-1. Within the RDP session to **azscaleset-vm0**, from Server Manager, click **Local Server**, then disable **IE Enhanced Security Configuration**.
+1. In the command shell or PowerShell connect to **azlin-vm0** via the **SSH**.
 
-2. Within the RDP session to **azscaleset-vm0**, start Microsoft Edge and download **putty.exe** from [**https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html**](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) 
+   ```
+   ssh Student@azlin-vm0
+   ```
 
-3. Use **putty.exe** to verify that you can successfully connect to **azlin-vm0** on its private IP address via the **SSH** protocol (TCP 22).
+   
 
-4. When prompted, authenticate by specifying the following values:
+2. When prompted, authenticate with the password `Pa55w.rd1234`.
 
-		- User name: **Student**
-
-		- Password: **Pa55w.rd1234**
 
 > **Note**: Both the username and password are case sensitive.  
- 
-5. Once you successfully authenticated, terminate the RDP session to **azscaleset-vm0**.
+
+5. Once you have successfully authenticated, terminate the RDP session to **azscaleset-vm0**.
 
 6. Navigate to the **azlin-vm0** blade.
 
@@ -370,9 +371,9 @@ The main tasks for this exercise are as follows:
 
 8. On the **azlin-vm0 - Networking** blade, review the inbound port rules of the network security group assigned to the network interface of **azscaleset-vm0** to determine why your SSH connection via the private IP address was successful.
 
-> **Note**: The default configuration consisting of built-in rules allows inbound connections within the Azure virtual network environment (including connections via the SSH port TCP 22).  
+> **Note**: The default configuration, consisting of built-in rules, allows inbound connections within the Azure virtual network environment (including connections via the SSH port).  
 
-> **Result**: After you completed this exercise, you have configured static private and public IP addresses of Azure VMs, connected to an Azure VM running Windows Server 2022 Datacenter via a public IP address, and connect to an Azure VM running Linux Ubuntu Server via a private IP address  
+> **Result**: After you completed this exercise, you have configured static private and public IP addresses of Azure VMs, connected to an Azure VM running Windows Server 2022 Datacenter via a public IP address, and connected to an Azure VM running Linux Ubuntu Server via a private IP address  
 
 
 ### Exercise 3: Deploy and configure Azure VM scale sets
