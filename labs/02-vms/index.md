@@ -380,22 +380,22 @@ Click **Add**
 
 The main tasks for this exercise are as follows:
 
-1. Identify an available DNS name for an Azure VM scale set deployment
+1. Identify an available DNS name for an Azure VM scale set deployment.
 
-2. Deploy an Azure VM scale set
+2. Deploy an Azure VM scale set.
 
-3. Install IIS on a scale set VM by using DSC extensions
+3. Install IIS on a scale set VM by using DSC extensions.
 
 
 #### Task 1: Identify an available DNS name for an Azure VM scale set deployment
 
 1. From the Azure Portal, start a PowerShell session in the Cloud Shell pane. 
 
-2. In the Cloud Shell pane, run the following command, substituting the placeholder &lt;custom-label&gt; with any string which is likely to be unique.
+2. In the Cloud Shell pane, run the following command, substituting the placeholder &lt;custom-label&gt; with any string that is likely to be unique.
 
 ```powershell
 $rg = Get-AzResourceGroup -Name azscaleset-RG 
-$location = $resourceGroup.Location
+$location = $rg.Location
 Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 ```
 
@@ -414,31 +414,27 @@ Test-AzDnsAvailability -DomainNameLabel <custom-label> -Location $location
 
 4. Use the **Create virtual machine scale set** blade to deploy a virtual machine scale set with the following settings:
 
+- Subscription: the name of the subscription you are using in this lab
+- Resource group: **scaleset-RG**
 - Virtual machine scale set name: **azscalesetvmss0**
+- Region: the same Azure region you chose in the previous exercises of this lab
+- Availability zone: **None**
+- Orchestration mode: **Flexible** (default)
+- Security type: **Standard**
+- Scaling mode: **Manually update the capacity**
+- Instance count: **1**
 
-* Operating system disk image: **Windows Server 2022 Datacenter**
-
-* Subscription: the name of the subscription you are using in this lab
-
-* Resource group: the name of a new resource group **scaleset-RG**
-
-* Location: the same Azure region you chose in the previous exercises of this lab
-
-* Availability zone: **None**
-
+* Image: **[smalldisk] Windows Server 2022 Datacenter**
 * Username: **Student**
-
 * Password: **Pa55w.rd1234**
-
-* Instance count: **1**
-
 * Instance size: **DS1 v2**
-
+* Licensing: **Unchecked**
 * Deploy as low priority: **No**
-
 * Use managed disks: **Yes**
 
-* Scaling mode: **Manually update the capacity**
+On the **Storage** page: 
+
+* OS disk type: **Standard HDD**
 
 Under the **Networking** tab
 * Virtual network: the name of a new virtual network **azscaleset-vnet0** with the following settings:
