@@ -1,10 +1,6 @@
 # Advanced Azure Course Site
 
-This site includes the slides and labs for the Advanced Azure class. 
-
-## Course Content
-[Day 1](https://bit.ly/adv-azure-day1)
-[Day 2](https://bit.ly/adv-azure-day2)
+This site includes the labs for the Advanced Azure class. 
 
 ## Labs
 
