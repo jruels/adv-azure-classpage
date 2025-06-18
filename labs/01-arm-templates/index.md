@@ -74,10 +74,8 @@ The linked storage template we are creating, `storage.json` will create a storag
         }
       ]
 ```
-
-![](index/linkedtemplatestorage1.png)
  
-3. Rename the `name` element of storageAccount from `variables` to `parameters`
+1. Rename the `name` element of storageAccount from `variables` to `parameters`
 
 ```json
 "resources": [
@@ -95,7 +93,19 @@ The linked storage template we are creating, `storage.json` will create a storag
 ```
 
 4. Next, remove the `variables` section and all variable definitions, as highlighted below,
-![](index/linkedtemplatestorage2.png)
+```json
+  "variables": {
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
+    "nicName": "myVMNic",
+    "addressPrefix": "10.0.0.0/16",
+    "subnetName": "Subnet",
+    "subnetPrefix": "10.0.0.0/24",
+    "publicIPAddressName": "myPublicIP",
+    "vmName": "SimpleWinVM",
+    "virtualNetworkName": "MyVNET",
+    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+  },
+```
 
 5. Next, remove all `parameter` values except **location** and add the following parameter code. It should end up looking as in the screenshot below.
 ```json
@@ -106,8 +116,6 @@ The linked storage template we are creating, `storage.json` will create a storag
     }
     },
 ```
-
-![](index/linkedtemplatestorage4.png)
 
 6. Next, update the `output` section to define a `storageURI` output value. The `storageUri` value is required by the virtual machine resource definition in the main template. You pass the value back to the main template as an output value. Modify the output so it looks like the below.
 
@@ -120,49 +128,42 @@ The linked storage template we are creating, `storage.json` will create a storag
     }
 ```
 
-![](index/linkedtemplatestorage5.png)
 
 7. Save the storage.json template. The linked storage template should now look like the below,
 
 ```json
 {
-      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-      "contentVersion": "1.0.0.0",
-      "parameters": {
-        "storageAccountName":{
-          "type": "string",
-          "metadata": {
-            "description": "Azure Storage account name."
-          }
-        },
-        "location": {
-          "type": "string",
-          "defaultValue": "[resourceGroup().location]",
-          "metadata": {
-            "description": "Location for all resources."
-          }
-        }
-      },
-      "resources": [
-        {
-          "type": "Microsoft.Storage/storageAccounts",
-          "name": "[parameters('storageAccountName')]",
-          "apiVersion": "2016-01-01",
-          "location": "[parameters('location')]",
-          "sku": {
-            "name": "Standard_LRS"
-          },
-          "kind": "Storage",
-          "properties": {}
-        }
-      ],
-      "outputs": {
-          "storageUri": {
-              "type": "string",
-              "value": "[reference(parameters('storageAccountName')).primaryEndpoints.blob]"
-            }
-      }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": { "description": "Deployment location for all resources." }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": { "description": "Name of the Storage Account." }
     }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2024-01-01",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": { "name": "Standard_LRS" },
+      "kind": "StorageV2",
+      "properties": {}
+    }
+  ],
+  "outputs": {
+    "storageUri": {
+      "type": "string",
+      "value": "[reference(parameters('storageAccountName')).primaryEndpoints.blob]"
+    }
+  }
+}
 ```
 ### Task 3: Upload Linked Template to Azure Blob Storage and generate SAS token
 When linking to a template, the Azure Resource Manager service must be able to access it. As such You **cannot** specify a local file or a file that is only available on your local network. You can only provide a URI value that includes either `http` or `https`.
