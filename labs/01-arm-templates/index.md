@@ -237,7 +237,7 @@ echo "finished"
 - **$resourcegroupName**: `advazurejrsrg`
 - **$templateURI**:
 ```
-https://lnkedtempprojstracc.blob.core.windows.net/linktempblobcntr/storage.json?sv=2018-03-28&sr=b&sig=B4hDLt9rFaWHZXToJlMwMjejAQGT7x0INdDR9bHBQnI%3D&se=2019-02-05T10%3A09%3A48Z&sp=r`
+https://advazurestracc.blob.core.windows.net/linktempblobcntr/storage.json?sv=2025-05-05&se=2025-06-19T16%3A04%3A46Z&sr=b&sp=r&sig=gfLWUMAIRqi3GVH%2BqKHX75tgOBjEzj3cBWk1iRSvLtg%3D
 ```
 
 For scenarios requiring more security we could configure the main template to generate a SAS token when the template is being run, and give the SAS token expiry a smaller window to make it more secure. You can see the [Deploy private Resource Manager template with SAS token and Azure PowerShell](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-powershell-sas-token#provide-sas-token-during-deployment) page for more details on how to do this.
@@ -250,39 +250,35 @@ To account for the changes we made to the templates structure by modularizing al
 2. In the `resource` section remove the `storage` resource element
 
 ```json
-{
+    {
       "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2024-01-01",
       "name": "[variables('storageAccountName')]",
       "location": "[parameters('location')]",
-      "apiVersion": "2018-07-01",
-      "sku": {
-        "name": "Standard_LRS"
-      },
-      "kind": "Storage",
+      "sku": { "name": "Standard_LRS" },
+      "kind": "StorageV2",
       "properties": {}
     },
 ```
 
-![](index/linkedmaintemplate1.png)
-
-3. Next, add the following code to the `resources` section where the storage element was that you just deleted.
+1. Next, add the following code to the `resources` section where the storage element was that you just deleted.
 
 **Note**: Ensure to paste in the `$templateURI` value that you obtained when you uploaded the linked `storage.json` to blob storage earlier.
 
 ```json
-{
+    {
       "name": "linkedTemplate",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2018-05-01",
+      "apiVersion": "2024-07-01",
       "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri":"< enter the Template URI value you obtained earlier containing a SAS Token >"
-          },
-          "parameters": {
-              "storageAccountName":{"value": "[variables('storageAccountName')]"},
-              "location":{"value": "[parameters('location')]"}
-          }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "< enter the Template URI value you obtained earlier containing a SAS Token >"
+        },
+        "parameters": {
+          "storageAccountName": { "value": "[variables('storageAccountName')]" },
+          "location": { "value": "[parameters('location')]" }
+        }
       }
     },
 ```
@@ -315,8 +311,7 @@ to
             "linkedTemplate",
             "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
 ```
-
-![](index/linkedmaintemplate4.png)
+![alt text](image.png)
 
 2.  Still in the `resources` section under the `Microsoft.Compute/virtualMachines` element, reconfigure the `properties/diagnosticsProfile/bootDiagnostics/storageUri` element to the output value you defined in the linked storage template as below. This value is required by the main template
 
@@ -338,7 +333,7 @@ to
               }
 ```
 
-![](index/linkedmaintemplate5.png)
+![alt text](image-1.png)
 
 3. Save the updated main deployment template.
 
@@ -347,10 +342,10 @@ You can deploy templates using a variety of methods, including directly from the
 
 We need to ensure the main deployment template, `azuredeploy.json`, is accessible from the Azure Cloud Shell. We do that by uploading the `azuredeploy.json` to blob storage and obtaining the file URL. Then when running Azure CLI command we will use a `--template-uri` parameter.
 
-Start by uploading `azuredeploy.json`  to blog storage. 
+Start by uploading `azuredeploy.json`  to blob storage. 
 
 1. In the Azure Portal click **Storage accounts** on the blade and then on the new screen click on the storage account you created with the `PowerShell` script. 
-![](index/azure-stor-account.png)
+![alt text](image-2.png)
 
 2. Locate the **Configuration** setting under **Settings**
 3. For this lab, set **Allow Blob anonymous access** to **Enabled**. You can learn more about this feature <a href="https://go.microsoft.com/fwlink/?LinkId=2118254">here</a>.
@@ -358,14 +353,14 @@ Start by uploading `azuredeploy.json`  to blog storage.
 5. Click **Containers** under **Data storage**
 6. Create a new container and give it public access. 
 
-![](index/A9E08C43-4626-4B97-8087-7F3A34DB0731.png)
+![alt text](image-3.png)
 
 
 4. Upload the updated `azuredeploy.json` to the new container and get the URL. 
 5. Now open Azure CLI  and run the following 
 
 ```bash
-az group deployment create --name < name for the deployment > --resource-group < resource group you created earlier when running PowerShell script >  --template-uri <URL for uploaded azuredeploy.json>
+az deployment group create --name < name for the deployment > --resource-group < resource group you created earlier when running PowerShell script > --template-uri <URL for uploaded azuredeploy.json> 
 ```
 
 You will be prompted to enter values for:
@@ -614,5 +609,5 @@ In this lab you have:
 * Uploaded the linked storage template to Azure Blob Storage and generated SAS token to be called by the main deployment template.
 * Modified the main template to call linked template
 * Modified main template to update dependencies
-* Uploaded the main template to Azure Blog Storage 
+* Uploaded the main template to Azure blob Storage 
 * Deployed resources to Azure using AZ CLI 

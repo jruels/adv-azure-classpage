@@ -1,24 +1,18 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
       "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine."
-      }
+      "metadata": { "description": "Username for the Virtual Machine." }
     },
     "adminPassword": {
       "type": "securestring",
-      "metadata": {
-        "description": "Password for the Virtual Machine."
-      }
+      "metadata": { "description": "Password for the Virtual Machine." }
     },
     "dnsLabelPrefix": {
       "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
+      "metadata": { "description": "Unique DNS name for the Public IP." }
     },
     "windowsOSVersion": {
       "type": "string",
@@ -27,21 +21,19 @@
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
+        "2019-Datacenter",
         "2022-Nano-Server",
         "2022-Datacenter-with-Containers",
-        "2022-Datacenter",
-        "2019-Datacenter"
+        "2022-Datacenter"
       ],
       "metadata": {
-        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+        "description": "Windows OS version (latest patched image)."
       }
     },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
-      }
+      "metadata": { "description": "Deployment location for all resources." }
     }
   },
   "variables": {
@@ -58,56 +50,46 @@
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2024-01-01",
       "name": "[variables('storageAccountName')]",
       "location": "[parameters('location')]",
-      "sku": {
-        "name": "Standard_LRS"
-      },
-      "kind": "Storage",
+      "sku": { "name": "Standard_LRS" },
+      "kind": "StorageV2",
       "properties": {}
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2022-11-01",
       "name": "[variables('publicIPAddressName')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-        }
+        "dnsSettings": { "domainNameLabel": "[parameters('dnsLabelPrefix')]" }
       }
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2024-01-01",
       "name": "[variables('virtualNetworkName')]",
       "location": "[parameters('location')]",
       "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('addressPrefix')]"
-          ]
-        },
+        "addressSpace": { "addressPrefixes": ["[variables('addressPrefix')]"] },
         "subnets": [
           {
             "name": "[variables('subnetName')]",
-            "properties": {
-              "addressPrefix": "[variables('subnetPrefix')]"
-            }
+            "properties": { "addressPrefix": "[variables('subnetPrefix')]" }
           }
         ]
       }
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2023-11-01",
       "name": "[variables('nicName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -115,12 +97,8 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
-              },
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              }
+              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]" },
+              "subnet": { "id": "[variables('subnetRef')]" }
             }
           }
         ]
@@ -128,21 +106,23 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2018-10-01",
+      "apiVersion": "2024-07-01",
       "name": "[variables('vmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
       ],
       "properties": {
-        "hardwareProfile": {
-          "vmSize": "Standard_D1"
-        },
+        "hardwareProfile": { "vmSize": "Standard_D1" },
         "osProfile": {
           "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminPassword": "[parameters('adminPassword')]",
+          "windowsConfiguration": {
+            "provisionVMAgent": true,
+            "enableAutomaticUpdates": true
+          }
         },
         "storageProfile": {
           "imageReference": {
@@ -151,28 +131,20 @@
             "sku": "[parameters('windowsOSVersion')]",
             "version": "latest"
           },
-          "osDisk": {
-            "createOption": "FromImage"
-          },
+          "osDisk": { "createOption": "FromImage", "managedDisk": { "storageAccountType": "Standard_LRS" } },
           "dataDisks": [
-            {
-              "diskSizeGB": 1023,
-              "lun": 0,
-              "createOption": "Empty"
-            }
+            { "lun": 0, "createOption": "Empty", "diskSizeGB": 1023 }
           ]
         },
         "networkProfile": {
           "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
-            }
+            { "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]" }
           ]
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob]"
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.blob]"
           }
         }
       }
@@ -181,7 +153,7 @@
   "outputs": {
     "hostname": {
       "type": "string",
-      "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))).dnsSettings.fqdn]"
     }
   }
 }
