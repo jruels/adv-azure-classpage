@@ -379,7 +379,7 @@ Once complete, you will get output in the terminal similar to this:
 
 ```bash
 {
-  "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/advazureprj",
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/advazureprj",
   "location": null,
   "name": "advazureprj",
   "properties": {
@@ -389,19 +389,19 @@ Once complete, you will get output in the terminal similar to this:
       {
         "dependsOn": [
           {
-            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+            "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
             "resourceGroup": "advazurerg",
             "resourceName": "myPublicIP",
             "resourceType": "Microsoft.Network/publicIPAddresses"
           },
           {
-            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
+            "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
             "resourceGroup": "advazurerg",
             "resourceName": "MyVNET",
             "resourceType": "Microsoft.Network/virtualNetworks"
           }
         ],
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
         "resourceGroup": "advazurerg",
         "resourceName": "myVMNic",
         "resourceType": "Microsoft.Network/networkInterfaces"
@@ -409,19 +409,19 @@ Once complete, you will get output in the terminal similar to this:
       {
         "dependsOn": [
           {
-            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/linkedTemplate",
+            "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Resources/deployments/linkedTemplate",
             "resourceGroup": "advazurerg",
             "resourceName": "linkedTemplate",
             "resourceType": "Microsoft.Resources/deployments"
           },
           {
-            "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+            "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
             "resourceGroup": "advazurerg",
             "resourceName": "myVMNic",
             "resourceType": "Microsoft.Network/networkInterfaces"
           }
         ],
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
         "resourceGroup": "advazurerg",
         "resourceName": "SimpleWinVM",
         "resourceType": "Microsoft.Compute/virtualMachines"
@@ -433,23 +433,23 @@ Once complete, you will get output in the terminal similar to this:
     "onErrorDeployment": null,
     "outputResources": [
       {
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
         "resourceGroup": "advazurerg"
       },
       {
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/networkInterfaces/myVMNic",
         "resourceGroup": "advazurerg"
       },
       {
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
         "resourceGroup": "advazurerg"
       },
       {
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Network/virtualNetworks/MyVNET",
         "resourceGroup": "advazurerg"
       },
       {
-        "id": "/subscriptions/0cd8cf48-7691-4e5b-a486-738823fafd0a/resourceGroups/advazurerg/providers/Microsoft.Storage/storageAccounts/shivilgbac2nwsawinvm",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/advazurerg/providers/Microsoft.Storage/storageAccounts/shivilgbac2nwsawinvm",
         "resourceGroup": "advazurerg"
       }
     ],
