@@ -434,22 +434,29 @@ On the **Storage** page:
 
 * OS disk type: **Standard HDD**
 
-Under the **Networking** tab
-* Virtual network: the name of a new virtual network **azscaleset-vnet0** with the following settings:
-
+On the **Networking** page:
+* Virtual network: Edit the virtual network and configure it with the following settings:  
+* Name: **azscaleset-vnet0**
 * Address range: **10.203.0.0/16**
-
 * Subnet name: **subnet0**
-
 * Subnet starting address range: **10.203.0.0**
 * Subnet size: **/24 (256 addresses)**
-* Choose Load balancing options: **Azure load balancer**
-* Click **Create a load balancer**
+* Click **Save**
+* Click **Save** again
+
+Back on the **Networking** page:
+
+Confirm the network interface has the following:
+
+* NIC network security group: **Basic**
+* Select inbound ports: **HTTP (80)**
+
+Create a **Azure load balancer** with the following: 
+
 * Load balancer name: **azscaleset-vnet0-lb**
+* Type: **Public**
+* Protocol: **TCP**
 * Click **Create**
-* Edit the network interface with the following:
-  * NIC network security group: **Basic**
-  * Select inbound ports: **HTTP (80)**
 * Go to the **Management** tabe and Disable **Boot diagnostics**
 * Click **Review + create**, then click **Create**
 
@@ -483,15 +490,12 @@ Under the **Networking** tab
 - Auto Upgrade Minor Version: **Yes**  
 - Click **Create**
 
-1. Navigate to the **azscalesetvmss0 - Instances** blade and initiate the upgrade of the **azscalesetvmss0_** instance.
+2. Navigate to the **azscalesetvmss0** **Overview** blade. 
 
-> **Note**: The update will trigger application of the DSC configuration script. Wait for upgrade to complete. This should take about 5 minutes. You can monitor the progress from the **azscalesetvmss0 - Instances** blade.  
+3. Note the public IP address assigned to **azscalesetvmss0**.
 
-2. Once the upgrade completes, navigate to the **Overview** blade. 
-
-3. On the **azscalesetvmss0-ip** blade, note the public IP address assigned to **azscalesetvmss0**.
-
-4. In a browser navigate to the public IP address you identified in the previous step.
+4. In a browser, navigate to the public IP address you identified in the previous step.
+   1. If you receive a secure connection error, continue to the site.
 
 5. Verify that the browser displays the default IIS home page. 
 
