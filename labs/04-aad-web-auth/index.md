@@ -293,7 +293,12 @@ npm start
 
 Open browser to `http://localhost:3000`
 
-Login → Call API → You should see the JSON response from the protected API!
+* Click **Login** 
+* You will be redirected to an Azure login page. Log in with the credentials from the spreadsheet.
+* Authorize the app  
+* You will be returned to the frontend node app. 
+* Click **Call Secure API**
+* You should see the JSON response from the protected API.
 
 ---
 
