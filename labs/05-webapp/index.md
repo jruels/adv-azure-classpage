@@ -114,46 +114,50 @@ az webapp create --name $WEBAPPNAME2 --plan advazure-serverless-$LOCATION --reso
 1. In the **Open** dialog box, navigate to the **05-webapp/files** folder, select the **github.json** file, and click **Open**. The file contains the following Azure Resource Manager template:
 
 ```json
-    {
-        "$schema": "http://schemas.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-        "contentVersion": "1.0.0.0",
-        "parameters": {
-            "webAppName": {
-                "type": "string"
-            },
-            "repositoryUrl": {
-                "type": "string"
-            },
-            "branch": {
-                "type": "string",
-                "defaultValue": "master"
-            }
-        },
-        "resources": [
-            {
-                "apiVersion": "2015-08-01",
-                "type": "Microsoft.Web/sites",
-                "name": "[parameters('webAppName')]",
-                "location": "[resourceGroup().location]",
-                "properties": {},
-                "resources": [
-                    {
-                        "apiVersion": "2015-08-01",
-                        "name": "web",
-                        "type": "sourcecontrols",
-                        "dependsOn": [
-                            "[resourceId('Microsoft.Web/Sites', parameters('webAppName'))]"
-                        ],
-                        "properties": {
-                            "RepoUrl": "[parameters('repositoryUrl')]",
-                            "branch": "[parameters('branch')]",
-                            "IsManualIntegration": true
-                        }
-                    }
-                ]
-            }
-        ]
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "webAppName": {
+      "type": "string"
+    },
+    "repositoryUrl": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "main"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
     }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2023-01-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+      "properties": {},
+      "resources": [
+        {
+          "type": "sourcecontrols",
+          "apiVersion": "2022-03-01",
+          "name": "web",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+          ],
+          "properties": {
+            "repoUrl": "[parameters('repositoryUrl')]",
+            "branch": "[parameters('branch')]",
+            "isManualIntegration": true
+          }
+        }
+      ]
+    }
+  ]
+}
 ```
 
 1. In the **Cloud Shell** pane, click the **Manage files** icon and, in the drop-down menu, click **Upload**. 
@@ -161,21 +165,24 @@ az webapp create --name $WEBAPPNAME2 --plan advazure-serverless-$LOCATION --reso
 1. In the **Open** dialog box, navigate to the **05-webapp/files** folder, select the **parameters.json** file, and click **Open**. The file contains the following parameters for the Azure Resource Manager template you uploaded previously:
 
 ```json
-    {
-      "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-      "contentVersion": "1.0.0.0",
-      "parameters": {
-        "webAppName": {
-          "value": "$WEBAPPNAME2"
-        },
-        "repositoryUrl": {		
-          "value": "$REPOSITORY_URL"
-        },
-        "branch": {
-          "value": "master"
-        }
-      }
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "webAppName": {
+      "value": "$WEBAPPNAME2"
+    },
+    "repositoryUrl": {
+      "value": "$REPOSITORY_URL"
+    },
+    "branch": {
+      "value": "main"
+    },
+    "location": {
+      "value": "[resourceGroup().location]"
     }
+  }
+}
 ```
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a variable which value designates the name of the GitHub repository hosting the web app code:
