@@ -80,15 +80,24 @@ Your full scope URI will look like:
    * Click **Add a permission** > **APIs my organization uses**
    * Choose `MySecureAPI` from earlier
    * Select `Delegated permissions` > `access_as_user`
-   * Click **Add a permission**
-   * Click **Grant admin consent** if you are an admin
+   * Click **Add permissions**
 
 ### Record the following:
 
-* **Frontend App (Client) ID**
-* **Backend App ID URI**
-* **Tenant ID**
-You can find the values from the overview page of each app registration.
+Go to **Applications** -> **App registrations**.
+
+* Click **MyReactClient**. 
+
+* Record the `Application (client) ID`
+
+Go back to **App registrations** 
+
+* Click **MySecureAPI**
+* Record the `Application (client) ID`
+
+* **Directory (tenant) ID**
+  You can find the values from the overview page of each app registration.
+
 ---
 
 ## Step 3: Create Backend Node.js API
