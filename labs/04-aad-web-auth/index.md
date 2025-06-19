@@ -1,4 +1,4 @@
-# Lab 3: Microsoft Entra ID Authenticated Web App
+# Lab 4: Microsoft Entra ID Authenticated Web App
 
 In this lab, you will build a secure web application consisting of a **React frontend** and a **Node.js backend API** that uses **Microsoft Entra ID (Azure AD)** for authentication. This end-to-end lab is structured to give students a clear understanding of how enterprise identity systems like Entra ID can be integrated with modern web apps.
 
@@ -42,13 +42,13 @@ By the end of this lab, you will:
 
 1. After registration, go to the app's **"Expose an API"** section.
 2. Click **"Add"** for the Application ID URI. Use the default or custom name (e.g. `api://<client_id>`).
-3. Click **Save**
-4. Click **"Add a scope"**:
+3. Click **Save and continue**
+4. On the **"Add a scope"** page:
 
    * Scope name: `access_as_user`
+   * Who can consent: `Admins and users`
    * Admin consent display name: `Access Secure API`
    * Admin consent description: `Allows access to the protected API.`
-   * Who can consent: Admins and users
    * Click **Add scope**
 Your full scope URI will look like:
 ![alt text](image.png)
@@ -80,7 +80,7 @@ Your full scope URI will look like:
    * Click **Add a permission** > **APIs my organization uses**
    * Choose `MySecureAPI` from earlier
    * Select `Delegated permissions` > `access_as_user`
-   * Click **Add permissions**
+   * Click **Add a permission**
    * Click **Grant admin consent** if you are an admin
 
 ### Record the following:
