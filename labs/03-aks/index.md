@@ -12,18 +12,6 @@ In this lab you will:
 
 ## Prerequisites
 
-If on Windows, install WSL by opening PowerShell or Command prompt in administrator mode then run the following command:
-```bash
-wsl --install
-```
-
-Restart your machine after installation
-
-Open PowerShell then run the following command to open WSL:
-```bash
-wsl
-```
-
 Before you begin, set the following environment variables:
 
 ```bash
