@@ -5,24 +5,12 @@ Kubernetes provides a distributed platform for containerized applications. With 
 In this lab you will: 
 
 * Create a new resource group for AKS cluster
-* Deploy a Kubernetes AKS cluster from Basj
+* Deploy a Kubernetes AKS cluster from Bash
 * Deploy a multi-tier application 
 * Scale the application 
 * Perform a rolling update
 
 ## Prerequisites
-
-If on Windows, install WSL by opening PowerShell or Command prompt in administrator mode then run the following command:
-```bash
-wsl --install
-```
-
-Restart your machine after installation
-
-Open PowerShell then run the following command to open WSL:
-```bash
-wsl
-```
 
 Before you begin, set the following environment variables:
 
@@ -33,7 +21,7 @@ export RG_NAME=azaks<your_initials>
 export AKS_CLUSTER_NAME=myAKSCluster
 ```
 
-Navigate to the location of `03-aks\manifests` directory from within the WSL environment
+Navigate to the location of `03-aks\manifests` directory.
 
 ## Create new resource group 
 1. Log into Azure Cloud using the command `az login`
@@ -71,17 +59,6 @@ az aks get-credentials \
     --name $AKS_CLUSTER_NAME
 ```
 
-> **NOTE - Only applies to WSL**
-> When you run: `az aks get-credentials ...` from Windows (CMD or PowerShell), it modifies the Windows ~/.kube/config, i.e.:
-> C:\Users\yourname\.kube\config
-> But when you run kubectl inside WSL, it looks for the config in:
-> /home/yourname/.kube/config
-> So kubectl inside WSL is unaware of the credentials downloaded on the Windows side.
-> To fix this run the following command inside WSL:
-```bash
-mkdir -p ~/.kube
-cp /mnt/c/Users/yourname/.kube/config ~/.kube/config
-```
 
 To verify the connection to your cluster, run the [kubectl get nodes][kubectl-get] command:
 
