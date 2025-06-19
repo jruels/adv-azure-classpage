@@ -3,7 +3,7 @@
 This site includes the labs for the Advanced Azure class. 
 
 ## Labs
-[Windows VM access](VM_access.md)
+[Windows VM access](VM_access.md)  
 [Azure credentials](https://docs.google.com/spreadsheets/d/1cYVlFaznBtFekmgpBA33HIrxLfWBJed-rpVi1WR-u90/edit?gid=2103659978#gid=2103659978)
 
 ### Day 1
