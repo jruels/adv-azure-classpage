@@ -5,7 +5,7 @@ Kubernetes provides a distributed platform for containerized applications. With 
 In this lab you will: 
 
 * Create a new resource group for AKS cluster
-* Deploy a Kubernetes AKS cluster from Basj
+* Deploy a Kubernetes AKS cluster from Bash
 * Deploy a multi-tier application 
 * Scale the application 
 * Perform a rolling update
