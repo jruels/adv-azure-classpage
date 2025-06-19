@@ -84,7 +84,7 @@ Your full scope URI will look like:
 
 ### Record the following:
 
-Go to **Applications** -> **App registrations**.
+Go to **Applications** -> **App registrations** > **Overview**
 
 * Click **MyReactClient**. 
 
@@ -96,13 +96,25 @@ Go back to **App registrations**
 * Record the `Application (client) ID`
 
 * **Directory (tenant) ID**
-  You can find the values from the overview page of each app registration.
+* Record the `Directory (tenant) ID`
 
 ---
 
 ## Step 3: Create Backend Node.js API
 
 Open a new terminal window and run the following commands.
+
+Install `nodeJS`
+
+* Close all instance of Visual Studio Code 
+* Run VS Code with administrator privileges
+* In the terminal type: 
+
+```
+choco install nodejs -y
+```
+
+After the installation is complete, close VS Code and relaunch it as a regular user.
 
 ```bash
 mkdir backend-api && cd backend-api
@@ -114,12 +126,12 @@ npm install express morgan cors passport passport-azure-ad dotenv
 
 ```env
 PORT=5000
-TENANT_ID=<your_tenant_id>
-CLIENT_ID=<backend_api_app_id>
-AUDIENCE=api://<backend_app_client_id>
+TENANT_ID=<Directory (tenant) ID>
+CLIENT_ID=<MySecureAPI Application (client) ID>
+AUDIENCE=api://<MySecureAPI Application (client) ID>
 ```
 
-Replace <your_tenant_id>, <backend_api_app_id> and api://<backend_app_client_id> with values from your app registrations.
+Replace <`Directory (tenant) ID`>, <`MySecureAPI Application (client) ID`> and api://<`MySecureAPI Application (client) ID`> with values from your app registrations.
 
 ### Create a new file named `backend-api/server.js` and paste the following code
 
@@ -169,16 +181,17 @@ node server.js
 Test:
 
 * Open browser: `http://localhost:5000/api/public` → should work.
-* `/api/secure` requires a token from the frontend.
+* `http://localhost:5000/api/secure` requires a token from the frontend.
 
 ---
 
 ## Step 4: Create React Frontend
 
-Navigate to your project root directory and run the followingn commands in a terminal window:cd 
+Navigate to your project root directory and run the following commands in a terminal window:
 
 ```bash
 npx create-react-app frontend --template typescript
+- Select y to proceed
 cd frontend
 npm install @azure/msal-browser @azure/msal-react axios
 ```
@@ -207,7 +220,7 @@ export const protectedResources = {
 ```
 
 Replace <frontend_app_client_id> and <tenant_id> with values from the MyReactClient app registration overview page.
-Repalce <backend_app_client_id> with values from the MySecureAPI app registration overview page.
+Replace <backend_app_client_id> with values from the MySecureAPI app registration overview page.
 
 ### `src/App.tsx`
 
