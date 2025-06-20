@@ -21,7 +21,7 @@ RESOURCE_GROUP_APP='advazure-serverless-RG'
 
 1. At the **Cloud Shell** command prompt at the bottom of the portal, type in the following command and press **Enter** to create a variable which value designates the region you will use in this exercise:
 ```sh
-LOCATION='westus2'
+LOCATION='eastus'
 ```
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create the resource group:
@@ -36,14 +36,14 @@ az group create --name $RESOURCE_GROUP_APP --location $LOCATION
 az appservice plan create --is-linux --name "advazure-serverless-$LOCATION" --resource-group $RESOURCE_GROUP_APP --location $LOCATION --sku F1
 ```
 
-   
+
 #### Task 4: Create a Web App instance
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to view a list of possible runtimes for a Linux-based App Service web app instance: 
 
 ```sh
 az webapp list-runtimes --linux --output tsv
-``` 
+```
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a new variable which value is a randomly generated string that you will use as the name of a new web app:
 
