@@ -10,3 +10,9 @@ This site includes the labs for the Advanced Azure class.
 Lab 1: [Azure Deployments using RM templates](labs/01-arm-templates/)  
 Lab 2: [Deploy Redundant Virtual Machines](labs/02-vms)   
 Lab 3: [Azure Kubernetes Service deployments](labs/03-aks)
+
+### Day 2
+Lab 4: [Create REST API that uses Entra ID for authentication](labs/04-aad-web-auth)   
+Lab 5: [Deploy webapp](labs/05-webapp)   
+Lab 6: [Multiple region Load Balancer and Traffic Manager](labs/06-lb_tm)
+
