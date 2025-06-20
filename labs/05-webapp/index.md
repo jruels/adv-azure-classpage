@@ -21,7 +21,7 @@ RESOURCE_GROUP_APP='advazure-serverless-RG'
 
 1. At the **Cloud Shell** command prompt at the bottom of the portal, type in the following command and press **Enter** to create a variable which value designates the region you will use in this exercise:
 ```sh
-LOCATION='eastus'
+LOCATION='westus'
 ```
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create the resource group:
