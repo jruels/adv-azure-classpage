@@ -3,16 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "webAppName": {
-      "value": "$WEBAPPNAME2"
+      "value": "webapp050222595427318"
     },
     "repositoryUrl": {
-      "value": "$REPOSITORY_URL"
+      "value": "https://github.com/Azure-Samples/nodejs-docs-hello-world"
     },
     "branch": {
       "value": "main"
-    },
-    "location": {
-      "value": "[resourceGroup().location]"
     }
   }
 }

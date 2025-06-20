@@ -16,12 +16,18 @@
 1. At the **Cloud Shell** command prompt at the bottom of the portal, type in the following command and press **Enter** to create a variable which value designates the name of the resource group you will use in this exercise:
 
 ```sh
-RESOURCE_GROUP_APP='advazure-serverless-RG'
+RESOURCE_GROUP_APP='advazure-serverless-RG-<your_initials>'
 ```
 
 1. At the **Cloud Shell** command prompt at the bottom of the portal, type in the following command and press **Enter** to create a variable which value designates the region you will use in this exercise:
 ```sh
 LOCATION='westus'
+```
+
+1. At the **Cloud Shell** command prompt at the bottom of the portal, type in the following command and press **Enter** to create a variable whose value designates the app plan you will use in this exercise:
+
+```sh
+APP_PLAN="advazure-serverless-$LOCATION-<your_initials>"
 ```
 
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create the resource group:
@@ -33,7 +39,7 @@ az group create --name $RESOURCE_GROUP_APP --location $LOCATION
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a new App Service plan:
 
 ```sh
-az appservice plan create --is-linux --name "advazure-serverless-$LOCATION" --resource-group $RESOURCE_GROUP_APP --location $LOCATION --sku F1
+az appservice plan create --is-linux --name "$APP_PLAN" --resource-group $RESOURCE_GROUP_APP --location $LOCATION --sku F1
 ```
 
 
@@ -54,7 +60,7 @@ WEBAPPNAME1=webapp05021$RANDOM$RANDOM
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a new web app using a unique name:
 
 ```sh
-az webapp create --name $WEBAPPNAME1 --plan advazure-serverless-$LOCATION --resource-group $RESOURCE_GROUP_APP --runtime "DOTNETCORE|9.0"
+az webapp create --name $WEBAPPNAME1 --plan "$APP_PLAN" --resource-group $RESOURCE_GROUP_APP --runtime "NODE|18-lts"
 ```
 
 > **Note**: In case the command fails due to duplicate web app name, re-run the last two steps until the command completes successfully  
@@ -82,18 +88,6 @@ az webapp create --name $WEBAPPNAME1 --plan advazure-serverless-$LOCATION --reso
 
 #### Task 1: Deploy code with a Web App Extension using an Azure Resource Manager template and GitHub
 
-1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a variable which value designates the name of the resource group you will use in this exercise:
-
-```sh
-RESOURCE_GROUP_APP='advazure-serverless-RG'
-```
-
-1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a variable which value designates the Azure region you will use for the deployment:
-
-```sh
-LOCATION=$(az group list --query "[?name == 'advazure-serverless-RG'].location" --output tsv)
-```
-
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a new variable which value is a randomly generated string that you will use as the name of a new web app:
 
 ```sh
@@ -103,13 +97,13 @@ WEBAPPNAME2=webapp05022$RANDOM$RANDOM
 1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to create a new web app using a unique name:
 
 ```sh
-az webapp create --name $WEBAPPNAME2 --plan advazure-serverless-$LOCATION --resource-group $RESOURCE_GROUP_APP --runtime "NODE|22-lts"
+az webapp create --name $WEBAPPNAME2 --plan "$APP_PLAN" --resource-group $RESOURCE_GROUP_APP --runtime "NODE|22-lts"
 ```
 
 > **Note**: In case the command fails due to duplicate web app name, re-run the last two steps until the command completes successfully  
 
 
-1. In the **Cloud Shell** pane, click the **Upload/Download files** icon and, in the drop-down menu, click **Upload**. 
+1. In the **Cloud Shell** pane, click the **Manage files** icon and, in the drop-down menu, click **Upload**. 
 
 1. In the **Open** dialog box, navigate to the **05-webapp/files** folder, select the **github.json** file, and click **Open**. The file contains the following Azure Resource Manager template:
 
@@ -170,16 +164,13 @@ az webapp create --name $WEBAPPNAME2 --plan advazure-serverless-$LOCATION --reso
   "contentVersion": "1.0.0.0",
   "parameters": {
     "webAppName": {
-      "value": "$WEBAPPNAME2"
+      "value": "webapp050222595427318"
     },
     "repositoryUrl": {
-      "value": "$REPOSITORY_URL"
+      "value": "https://github.com/Azure-Samples/nodejs-docs-hello-world"
     },
     "branch": {
       "value": "main"
-    },
-    "location": {
-      "value": "[resourceGroup().location]"
     }
   }
 }
@@ -231,35 +222,12 @@ az deployment group create --resource-group $RESOURCE_GROUP_APP --template-file 
 
 1. In the Azure portal, click **Resource groups**.
 
-1. On the **Resource groups** blade, click **advazure-serverless-RG**.
+1. On the **Resource groups** blade, click **advazure-serverless-RG-<your_initials>**.
 
-1. On the **advazure-serverless-RG** blade, click the entry representing the Azure web app you created in the previous task.
+1. On the **advazure-serverless-RG-<your_initials>** blade, click the entry representing the Azure web app you created in the previous task.
 
 1. On the web app blade, click the **Browse** button at the top of the blade.
 
 1. Review the sample Node.js web application deployed from GitHub.
 
 1. Close the new browser tab and return to the browser tab displaying the Azure portal.
-
-## Exercise 4: Remove lab resources
-
-1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to list all resource groups you created in this lab:
-
-```sh
-az group list --query "[?starts_with(name,'advazure')]".name --output tsv
-```
-
-1. Verify that the output contains only the resource groups you created in this lab. These groups will be deleted in the next task.
-
-#### Task 2: Delete resource groups
-
-1. At the **Cloud Shell** command prompt, type in the following command and press **Enter** to delete the resource groups you created in this lab
-
-```sh
-az group list --query "[?starts_with(name,'advazure')]".name --output tsv | xargs -L1 bash -c 'az group delete --name $0 --no-wait --yes'
-```
-
-1. Close the **Cloud Shell** prompt at the bottom of the portal.
-
-
-> **Review**: In this exercise, you removed the resources used in this lab.  
