@@ -1,4 +1,4 @@
-# Lab 5: Web Apps in Azure
+# Web Apps in Azure
 
 
 ## Exercise 1: Create Web App
