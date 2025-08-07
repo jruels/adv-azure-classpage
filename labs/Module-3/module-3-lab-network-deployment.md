@@ -1,4 +1,4 @@
-# **Progressive Network Deployment: VNets, Subnets, NSGs, and Peering**
+# **Network Deployment: VNets, Subnets, NSGs, and Peering**
 
 ## **Objective**
 
