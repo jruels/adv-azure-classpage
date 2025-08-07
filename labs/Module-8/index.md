@@ -1,4 +1,4 @@
-# Lab 6: Load Balancer and Traffic Manager
+# Load Balancer and Traffic Manager
 
 
 Lab files: 
