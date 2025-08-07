@@ -1,4 +1,4 @@
-# **Progressive Deployment: VM Scale Set with Autoscale and Diagnostics using Bicep**
+# **VM Scale Set with Autoscale and Diagnostics using Bicep**
 
 ## **Objective**
 
