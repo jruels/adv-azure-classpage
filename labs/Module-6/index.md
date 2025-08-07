@@ -1,4 +1,4 @@
-# Lab 4: Microsoft Entra ID Authenticated Web App
+# Microsoft Entra ID Authenticated Web App
 
 In this lab, you will build a secure web application consisting of a **React frontend** and a **Node.js backend API** that uses **Microsoft Entra ID (Azure AD)** for authentication. This end-to-end lab is structured to give students a clear understanding of how enterprise identity systems like Entra ID can be integrated with modern web apps.
 
