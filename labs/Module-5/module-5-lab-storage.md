@@ -145,6 +145,16 @@ By completing this lab, learners will understand how to automate Azure resource 
 
 ---
 
+### Clean up your resources
+
+1. To avoid charges, delete your entire resource group:
+
+    `student1 [ ~/progressive-vmss ]$` `az group delete --name storage-mgmt-<your-initials> --yes --no-wait`
+
+    > This will delete the **VMSS** and any other resources in the group.
+
+---
+
 ### Conclusion
 
 In this lab, you learned how to use a Bicep template to automate the deployment of an Azure Storage Account with a lifecycle management policy. You created a resource group, authored the infrastructure-as-code using Bicep, deployed it using `az deployment group create`, and validated that your policy was applied. This lab demonstrates how Infrastructure as Code (IaC) and lifecycle management work together to enforce automated storage governance and cost optimization.
