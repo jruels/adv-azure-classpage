@@ -31,7 +31,7 @@ By completing this lab, learners will understand how to automate Azure resource 
 
 0. Create a working directory and navigate into it.
 
-    `student1 [ ~ ]$` `mkdir storage--mgmt && cd storage--mgmt`
+    `student1 [ ~ ]$` `mkdir storage-mgmt && cd storage-mgmt`
 
 0. **Create a Bicep file to deploy VMSS infrastructure**.
 
