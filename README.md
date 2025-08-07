@@ -14,6 +14,6 @@ This site includes the labs for the Advanced Azure class.
 - Lab 5: [Deploy Storage with Lifecycle Management Policy](labs/Module-5/module-5-lab-storage.md)
 
 ### Day 2
-- Lab 6: [Create REST API that uses Entra ID for authentication](labs/04-aad-web-auth)   
-- Lab 7: [Deploy webapp](labs/05-webapp)   
-- Lab 8: [Multiple region Load Balancer and Traffic Manager](labs/06-lb_tm)
+- Lab 6: [Create REST API that uses Entra ID for authentication](labs/Module-6/index.md)   
+- Lab 7: [Deploy webapp](labs/Module-7/index.md)   
+- Lab 8: [Multiple region Load Balancer and Traffic Manager](labs/Module-8/index.md)
