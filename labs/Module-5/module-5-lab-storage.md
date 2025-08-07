@@ -92,7 +92,7 @@ By completing this lab, learners will understand how to automate Azure resource 
 
     ```
      az deployment group create \
-      --resource-group storage--mgmt-<your-initials> \
+      --resource-group storage-mgmt-<your-initials> \
       --template-file storage-mgmt.bicep \
       --parameters storageAccountName=storagelc<yourinitials>
     ```
