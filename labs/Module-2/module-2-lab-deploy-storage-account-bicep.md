@@ -70,7 +70,7 @@ In this lab, you’ll learn how to deploy a simple Azure Storage Account using a
 
 0. **Deploy the Bicep file using Azure CLI**. This command uses `$RANDOM` to generate a unique storage account name. **Update your resource group name accordingly.**
 
-    `student1 [ ~/bicep-demo ]$` `az deployment group create --resource-group bicep-arm-template-<your-initials> --template-file main.bicep --parameters` storageAccountName=storacct$RANDOM
+    `student1 [ ~/bicep-demo ]$` `az deployment group create --resource-group bicep-arm-template-<your-initials> --template-file main.bicep --parameters storageAccountName=storacct$RANDOM`
 
 > A successful deployment will return a JSON output with details about the deployed storage account.
 

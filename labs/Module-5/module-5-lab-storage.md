@@ -31,7 +31,7 @@ By completing this lab, learners will understand how to automate Azure resource 
 
 0. Create a working directory and navigate into it.
 
-    `student1 [ ~ ]$` `mkdir storage--mgmt && cd storage--mgmt`
+    `student1 [ ~ ]$` `mkdir storage-mgmt && cd storage-mgmt`
 
 0. **Create a Bicep file to deploy VMSS infrastructure**.
 
@@ -92,7 +92,7 @@ By completing this lab, learners will understand how to automate Azure resource 
 
     ```
      az deployment group create \
-      --resource-group storage--mgmt-<your-initials> \
+      --resource-group storage-mgmt-<your-initials> \
       --template-file storage-mgmt.bicep \
       --parameters storageAccountName=storagelc<yourinitials>
     ```
@@ -142,6 +142,16 @@ By completing this lab, learners will understand how to automate Azure resource 
      * **Age Condition:** `Base Blobs haven't been modified in 30 days.`
 
 > You will need to click into the rule, and navigate the tabs to see the full definition
+
+---
+
+### Clean up your resources
+
+1. To avoid charges, delete your entire resource group:
+
+    `student1 [ ~/progressive-vmss ]$` `az group delete --name storage-mgmt-<your-initials> --yes --no-wait`
+
+    > This will delete the **VMSS** and any other resources in the group.
 
 ---
 
