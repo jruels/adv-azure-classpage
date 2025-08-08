@@ -16,4 +16,3 @@ This site includes the labs for the Advanced Azure class.
 ### Day 2
 - Lab 6: [Create REST API that uses Entra ID for authentication](labs/Module-6/index.md)   
 - Lab 7: [Deploy webapp](labs/Module-7/index.md)   
-- Lab 8: [Multiple region Load Balancer and Traffic Manager](labs/Module-8/index.md)
