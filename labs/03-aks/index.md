@@ -1,4 +1,4 @@
-# Lab3: AKS
+# AKS
 
 Kubernetes provides a distributed platform for containerized applications. With AKS, you can quickly create a production ready Kubernetes cluster. In this tutorial we will deploy a Kubernetes cluster in AKS. 
 
